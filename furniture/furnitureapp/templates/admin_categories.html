@@ -1,0 +1,168 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Categories</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  {% comment %} <script src="{% static 'js/admin_scripts.js' %}"></script> {% endcomment %}
+</head>
+
+<body class="bg-white text-[#151a37] font-sans">
+
+  <div class="flex min-h-screen">
+
+    <div id="sidebar"
+      class="fixed top-0 left-0 h-full w-64 bg-[#bc9565] text-white p-6 z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+      <div class="flex items-center justify-between mb-6">
+        <div class="w-full bg-white flex justify-center">
+          <img src="./static/images/logo.png" alt="Logo" class="w-32 h-32 object-contain">
+        </div>
+        <button onclick="toggleSidebar()" class="md:hidden text-white text-2xl">&times;</button>
+      </div>
+      <nav>
+        <ul class="space-y-4 text-sm">
+          <li>
+            <a href="{% url 'dashboard' %}"
+              class="block py-2 px-4 rounded hover:bg-white hover:text-[#151a37]">Categories</a>
+          </li>
+          <li><a href="{% url 'category' %}" class="block py-2 px-4 rounded bg-white text-[#151a37]">Categories</a>
+          </li>
+          <li>
+            <a href="{% url 'listing' %}" class="block py-2 px-4 rounded hover:bg-white hover:text-[#151a37]">Product
+              listing</a>
+          </li>
+          <li>
+            <a href="{% url 'admin_enquiry' %}"
+              class="block py-2 px-4 rounded hover:bg-white hover:text-[#151a37]">Enquiry Form Submissions</a>
+          </li>
+          <li>
+            <a href="{% url 'admin_contact' %}"
+              class="block py-2 px-4 rounded hover:bg-white hover:text-[#151a37]">Contact Form Submissions</a>
+          </li>
+          <li>
+            <a href="{% url 'logout' %}" class="block py-2 px-4 rounded bg-[red] text-white">Logout</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <button onclick="toggleSidebar()"
+      class="md:hidden fixed top-4 left-4 z-50 bg-[#bc9565] text-white p-2 rounded shadow-lg">
+      &#9776;
+    </button>
+
+    <main class="flex-1 md:ml-64 p-6 bg-gray-50 min-h-screen max-md:pt-20">
+
+      <h1 class="text-2xl font-bold mb-6">Manage Categories</h1>
+
+      <form class="bg-white p-6 rounded-lg shadow-md mb-8" method="POST">
+        {% csrf_token %}
+        <div class="mb-4">
+          <label for="categoryName" class="block text-sm font-medium mb-2">Category Name</label>
+          <input type="text" id="categoryName" name="name" class="w-full border border-gray-300 rounded-lg p-2"
+            placeholder="e.g. Sofa" required>
+        </div>
+        <button type="submit" class="bg-[#bc9565] text-white px-4 py-2 rounded hover:bg-[#a47f54]">Add Category</button>
+      </form>
+
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-4">Category List</h2>
+        <table class="w-full border-collapse border border-gray-200">
+          <thead>
+            <tr class="bg-gray-100">
+              {% comment %} <th class="border border-gray-200 px-4 py-2">#</th> {% endcomment %}
+              <th class="border border-gray-200 px-4 py-2">Category Name</th>
+              <th class="border border-gray-200 px-4 py-2">Actions</th>
+            </tr>
+          </thead>
+         <tbody>
+  {% for category in categories %}
+  <tr data-category-id="{{ category.id }}">
+    {% comment %} <td class="border border-gray-200 px-4 py-2">{{ category.id }}</td> {% endcomment %}
+    <td class="border border-gray-200 px-4 py-2 category-name">{{ category.name }}</td>
+    <td class="border border-gray-200 px-4 py-2 space-x-2">
+      <!-- Edit button opens modal -->
+      <button onclick="openEditModal(this.closest('tr'))" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
+
+      <!-- Delete form -->
+      <form method="POST" action="{% url 'category' %}" style="display:inline;">
+        {% csrf_token %}
+        <input type="hidden" name="delete_id" value="{{ category.id }}">
+        <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</tbody>
+        </table>
+        </table>
+      </div>
+
+    </main>
+  </div>
+  <!-- Edit Modal -->
+<div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
+  <div class="bg-white w-full max-w-md rounded-lg shadow-lg p-6">
+    <h2 class="text-xl font-semibold mb-4">Edit Category</h2>
+    <form id="editForm" method="POST" action="{% url 'category' %}">
+      {% csrf_token %}
+      <input type="hidden" id="editCategoryId" name="edit_id" />
+      <div class="mb-4">
+        <label for="editCategoryName" class="block text-sm font-medium mb-2">Category Name</label>
+        <input type="text" id="editCategoryName" name="name" class="w-full border border-gray-300 rounded-lg p-2" required>
+      </div>
+      <div class="flex justify-end space-x-3">
+        <button type="button" onclick="closeEditModal()" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400">Cancel</button>
+        <button type="submit" class="px-4 py-2 rounded bg-[#bc9565] text-white hover:bg-[#a47f54]">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('-translate-x-full');
+    }
+
+    
+
+
+  </script>
+  <script>
+ let currentEditRow = null;
+
+  function openEditModal(row) {
+    currentEditRow = row;
+    const categoryName = row.querySelector('.category-name').innerText;
+    const categoryId = row.getAttribute('data-category-id');
+
+    document.getElementById('editCategoryName').value = categoryName;
+    document.getElementById('editCategoryId').value = categoryId;
+
+    const modal = document.getElementById('editModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+
+  function closeEditModal() {
+    const modal = document.getElementById('editModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+
+// Optionally update the table row immediately after form submission (if handled via AJAX)
+// But if you submit the form normally and reload the page, this isn't necessary.
+
+</script>
+
+</body>
+
+</html>

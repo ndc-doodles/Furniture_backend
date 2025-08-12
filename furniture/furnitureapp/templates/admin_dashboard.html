@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - Cybexel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white text-[#151a37] font-sans">
+
+  <div class="flex min-h-screen">
+
+
+
+<div id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-[#bc9565] text-white p-6 z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+  <div class="flex items-center justify-between mb-6">
+    <div class="w-full bg-white flex justify-center">
+      <img src="./static/images/logo.png" alt="Logo" class="w-32 h-32 object-contain">
+    </div>
+    <button onclick="toggleSidebar()" class="md:hidden text-white text-2xl">&times;</button>
+  </div>
+  <nav>
+    <ul class="space-y-4 text-sm">
+      <li>
+        <a href="{% url 'dashboard' %}" class="block py-2 px-4 rounded bg-white text-[#151a37]">Dashboard</a>
+      </li>
+      <li><a href="{% url 'category' %}" class="block py-2 px-4 rounded bg-white text-[#151a37]">Categories</a></li>
+      <li>
+        <a href="{% url 'listing' %}" class="block py-2 px-4 rounded hover:bg-white hover:text-[#151a37]">Product listing</a>
+      </li>
+      <li>
+        <a href="{% url 'admin_enquiry' %}" class="block py-2 px-4 rounded hover:bg-white hover:text-[#151a37]">Enquiry Form Submissions</a>
+      </li>
+      <li>
+        <a href="{% url 'admin_contact' %}" class="block py-2 px-4 rounded hover:bg-white hover:text-[#151a37]">Contact Form Submissions</a>
+      </li>
+      <li>
+        <a href="{% url 'logout' %}" class="block py-2 px-4 rounded bg-[red] text-white">Logout</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+<button onclick="toggleSidebar()" class="md:hidden fixed top-4 left-4 z-50 bg-[#bc9565] text-white p-2 rounded shadow-lg">
+  &#9776;
+</button>
+
+
+   
+<main class="flex-1 p-4 sm:p-6 ml-0 md:ml-64 bg-gray-100 overflow-x-hidden pt-32">
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6">
+    <div class="bg-white p-4 rounded-lg shadow text-center text-sm sm:text-base">
+      <h2 class="text-base sm:text-lg font-semibold mb-1 text-[#bc9565]">Total Products</h2>
+      <p class="text-xl sm:text-2xl font-bold text-[#151a37]" id="totalProducts">{{ product_count }}</p>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow text-center text-sm sm:text-base">
+      <h2 class="text-base sm:text-lg font-semibold mb-1 text-[#bc9565]">Total Enquiries</h2>
+      <p class="text-xl sm:text-2xl font-bold text-[#151a37]" id="totalEnquiries">{{ enquiry_count }}</p>
+    </div>
+  </div>
+
+  <!-- Enquiry Table (scrollable on mobile) -->
+  <div class="bg-white p-4 sm:p-6 rounded-lg shadow">
+    <h2 class="text-lg sm:text-xl font-semibold mb-4 text-[#151a37]">Enquiry List</h2>
+    
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm text-left border border-gray-200">
+        <thead class="bg-[#bc9565] text-white">
+          <tr>
+            <th class="py-3 px-4 border whitespace-nowrap">Product Name</th>
+            <th class="py-3 px-4 border whitespace-nowrap">Material</th>
+            <th class="py-3 px-4 border whitespace-nowrap">Price</th>
+            <th class="py-3 px-4 border whitespace-nowrap">Color</th>
+            <th class="py-3 px-4 border whitespace-nowrap">Customer Name</th>
+            <th class="py-3 px-4 border whitespace-nowrap">Contact Number</th>
+            <th class="py-3 px-4 border whitespace-nowrap">Action</th>
+          </tr>
+        </thead>
+        <tbody id="enquiryTableBody">
+          {% for enquiry in enquiry %}
+            <tr class="border-b">
+              <td class="py-3 px-6">{{enquiry.product_name}}</td>
+              <td class="py-3 px-6">{{enquiry.product_material}}</td>
+              <td class="py-3 px-6">₹{{enquiry.product_price}}</td>
+              <td class="py-3 px-6">{{enquiry.product_color}}</td>
+              <!-- <td class="py-3 px-6">{{enquiry.product_quantity}}</td> -->
+              <td class="py-3 px-6">{{enquiry.customer_name}}</td>
+              <td class="py-3 px-6">{{enquiry.contact_number}}</td>
+              <td class="py-3 px-6 text-center">
+                {% comment %} <button "{% url 'delete_enquiry' enquiry.id %}" onclick="deleteRow(this)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button> {% endcomment %}
+                <form method="POST" onsubmit="return confirm('Are you sure you want to delete this submission?');" style="display:inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="enquiry_id" value="{{ enquiry.id }}" />
+                  <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+
+
+</div>
+<script src="./static/js/admin_scripts.js"></script>
+</body>
+</html>

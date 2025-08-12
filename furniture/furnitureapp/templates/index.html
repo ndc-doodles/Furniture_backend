@@ -1,0 +1,581 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+
+{% block extra_meta_tags %}
+{% if product %}
+    <meta property="og:title" content="Hey, check out {{ product.name }} on Furnicraft!">
+    <meta property="og:description" content="Only ₹{{ product.offer }}. Don’t miss this deal!">
+    
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="product">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Hey, check out {{ product.name }} on Furnicraft!">
+    <meta name="twitter:description" content="Only ₹{{ product.offer }}. Don’t miss this deal!">
+    
+{% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="relative z-10 flex flex-col justify-center items-center h-full px-6 md:px-20 text-white text-center">
+      <h1 class="text-4xl md:text-6xl font-bold mb-4 uppercase animate-fadeUp leading-snug">
+        Transform Your Space <br /> with Timeless Furniture
+      </h1>
+      <p class="text-lg md:text-xl max-w-xl mt-2 animate-fadeUp delay-200">
+        Discover handcrafted furniture that blends elegance with comfort. Designed to suit every lifestyle.
+      </p>
+    </div>
+
+<div class="bg-white">
+
+  <section class="w-full px-4 md:px-24 py-10  mx-auto mt-10 max-md:px-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+
+      <div class="w-full" data-aos="fade-right">
+        <p class="text-sm text-[#bc9565] uppercase tracking-wider mb-2">Our Legacy</p>
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-700 mb-8 uppercase">
+          Crafting Comfort, One Piece at a Time
+        </h1>
+        <p class="text-gray-400 mb-6">
+          With decades of design expertise, we create furniture that blends style, comfort and durability - crafted
+          with passion and precision. </p>
+        <img src="./static/images/intro2.png" alt="Crafting"
+          class="rounded-lg shadow-md xl:w-[600px] xl:h-[600px] object-cover" data-aos="fade-up" data-aos-delay="300" />
+      </div>
+
+      <div class="flex flex-col xl:pl-52 w-full " data-aos="fade-left">
+        <img src="./static/images/intro.png" alt="Vision"
+          class="rounded-lg shadow-md w-full hidden sm:flex xl:w-[600px] xl:h-[500px] object-cover mb-20"
+          data-aos="fade-up" data-aos-delay="300" />
+
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-700 mb-2 uppercase">Our Vision</h1>
+        <p class="text-gray-400 mb-4">Furnishing Dreams, Elevating Lifestyles</p>
+
+        <ul class="space-y-3">
+          <li class="flex items-start gap-2 text-gray-400" data-aos="fade-up" data-aos-delay="400">
+            <span class="min-w-[24px]"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                viewBox="0 0 24 24">
+                <path fill="none" stroke="#bc9565" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M5 14.5s1.5 0 3.5 3.5c0 0 5.559-9.167 10.5-11" />
+              </svg></span><span>Customized furniture solutions for every home style</span>
+          </li>
+          <li class="flex items-start gap-2 text-gray-400" data-aos="fade-up" data-aos-delay="400">
+            <span class="min-w-[24px]"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                viewBox="0 0 24 24">
+                <path fill="none" stroke="#bc9565" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M5 14.5s1.5 0 3.5 3.5c0 0 5.559-9.167 10.5-11" />
+              </svg></span><span>Premium craftsmanship with top-grade materials</span>
+          </li>
+          <li class="flex items-start gap-2 text-gray-400" data-aos="fade-up" data-aos-delay="400">
+            <span class="min-w-[24px]"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                viewBox="0 0 24 24">
+                <path fill="none" stroke="#bc9565" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M5 14.5s1.5 0 3.5 3.5c0 0 5.559-9.167 10.5-11" />
+              </svg></span><span>Sustainable manufacturing and eco-conscious design</span>
+          </li>
+          <li class="flex items-start gap-2 text-gray-400" data-aos="fade-up" data-aos-delay="400">
+            <span class="min-w-[24px]"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                viewBox="0 0 24 24">
+                <path fill="none" stroke="#bc9565" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M5 14.5s1.5 0 3.5 3.5c0 0 5.559-9.167 10.5-11" />
+              </svg></span><span>A commitment to exceptional customer service</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+
+
+
+
+
+
+  {% comment %} <section class="py-16 mt-10">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-12">
+        <h1 class="text-2xl md:text-4xl font-bold text-gray-800 mb-2 uppercase">Our Products</h1>
+        <p class="text-gray-500 text-md">Discover furniture that combines elegance, quality and comfort for every
+          space.</p>
+      </div>
+
+      <div class="relative">
+        <button id="scrollLeft" class="absolute left-2 top-1/2 transform -translate-y-1/2 z-10   p-2  md:hidden">
+          &#10094;
+        </button>
+
+        <button id="scrollRight" class="absolute right-2 top-1/2 transform -translate-y-1/2 z-10   p-2  md:hidden">
+          &#10095;
+        </button>
+
+
+
+        <div id="cardContainer"
+          class="hide-scrollbar flex md:grid md:grid-cols-2 lg:grid-cols-4 overflow-x-auto md:overflow-visible gap-6 scroll-smooth snap-x snap-mandatory px-1 md:px-0">
+          {% for product in products %}
+          <a href="{% url 'product_detail' product.id %}" class="min-w-full md:min-w-0 snap-start group relative">
+
+            <div class="bg-white rounded-xl shadow p-4 hover:shadow-lg transition duration-300 w-full">
+
+              <div
+                class="absolute top-2 right-2 z-20 cursor-pointer bg-white rounded-full w-8 h-8 flex items-center justify-center shadow hover:shadow-md hover:bg-gray-100 transition duration-300"
+                onclick="openShareModal(event)">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="#3f3f3f">
+                  <path
+                    d="M17 22q-1.25 0-2.125-.875T14 19q0-.15.075-.7L7.05 14.2q-.4.375-.925.588T5 15q-1.25 0-2.125-.875T2 12t.875-2.125T5 9q.6 0 1.125.213t.925.587l7.025-4.1q-.05-.175-.062-.337T14 5q0-1.25.875-2.125T17 2t2.125.875T20 5t-.875 2.125T17 8q-.6 0-1.125-.213T14.95 7.2l-7.025 4.1q.05.175.063.338T8 12t-.012.363t-.063.337l7.025 4.1q.4-.375.925-.587T17 16q1.25 0 2.125.875T20 19t-.875 2.125T17 22m0-2q.425 0 .713-.287T18 19t-.288-.712T17 18t-.712.288T16 19t.288.713T17 20M5 13q.425 0 .713-.288T6 12t-.288-.712T5 11t-.712.288T4 12t.288.713T5 13m12-7q.425 0 .713-.288T18 5t-.288-.712T17 4t-.712.288T16 5t.288.713T17 6m0-1" />
+                </svg>
+              </div>
+
+              {% with product.images.all as images %}
+              {% if images %}
+              <img src="{{ images.0.image.url }}"
+                data-hover="{% if images|length > 1 %}{{ images.1.image.url }}{% else %}{{ images.0.image.url }}{% endif %}"
+                alt="{{ product.name }}" class="product-image w-full h-64 object-cover rounded-md mb-4" />
+              {% else %}
+              <img src="/static/images/default-product.jpg" alt="No Image Available"
+                class="product-image w-full h-64 object-cover rounded-md mb-4" />
+              {% endif %}
+              {% endwith %}
+
+              <h3 class="text-lg font-semibold">{{ product.name }}</h3>
+              <p class="text-sm text-gray-500">{{ product.material }}</p>
+
+              <div class="mt-1 flex items-center gap-2">
+                <span class="text-base font-bold text-[#bc9565]">₹{{ product.price }}</span>
+                <span class="text-sm text-gray-400 line-through">₹18,999</span>
+                <span class="text-sm text-[red] font-medium">21% off</span>
+              </div>
+
+              <button onclick="window.location.href='{% url 'product_detail' product.id %}'"
+                class="mt-4 w-full bg-[#bc9565] text-white py-2 rounded hover:bg-[#a27848] transition duration-300">
+                Detail View
+              </button>
+            </div>
+          </a>
+
+
+          {% endfor %}
+
+
+
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+    <div class="text-center mt-10">
+      <a href="{% url 'product' %}">
+        <button
+          class="border border-[#bc9565] text-[#bc9565] px-6 py-2 rounded-md font-semibold hover:bg-[#bc9565] hover:text-white transition duration-300">
+          Explore More
+        </button>
+      </a>
+    </div>
+
+  </section> {% endcomment %}
+
+ <section class="py-16 mt-10">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-12">
+      <h1 class="text-2xl md:text-4xl font-bold text-gray-800 mb-2 uppercase">Our Products</h1>
+      <p class="text-gray-500 text-md">
+        Discover furniture that combines elegance, quality and comfort for every space.
+      </p>
+    </div>
+
+    <div class="relative">
+      <!-- Mobile scroll buttons -->
+      <button id="scrollLeft"
+        class="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 p-2 md:hidden">
+        &#10094;
+      </button>
+      <button id="scrollRight"
+        class="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 p-2 md:hidden">
+        &#10095;
+      </button>
+
+      <!-- Product list -->
+      <div id="cardContainer"
+        class="hide-scrollbar flex md:grid md:grid-cols-2 lg:grid-cols-4 overflow-x-auto md:overflow-visible gap-6 scroll-smooth snap-x snap-mandatory px-1 md:px-0">
+        
+        {% for product in products %}
+<a href="{% url 'product_detail' product.id %}" class="min-w-full md:min-w-0 snap-start group">
+  <div class="bg-white rounded-xl shadow p-4 hover:shadow-lg transition duration-300 w-full">
+    
+    <!-- Image & Share button container -->
+    <div class="relative">
+      <!-- Share button -->
+      <div
+        class="absolute top-2 right-2 z-20 cursor-pointer bg-white rounded-full w-8 h-8 flex items-center justify-center shadow hover:shadow-md hover:bg-gray-100 transition duration-300 share-btn"
+        data-share-url="{{ request.build_absolute_uri|slice:':-1' }}{% url 'product_detail' product.id %}"
+        data-product-id="{{ product.id }}"
+        data-product-name="{{ product.name }}"
+        data-product-offer="{{ product.offer|default:product.price }}"
+        data-image-url="{{ product.absolute_image_url }}">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="#3f3f3f">
+          <path d="M17 22q-1.25 0-2.125-.875T14 19q0-.15.075-.7L7.05 14.2q-.4.375-.925.588T5 15q-1.25 0-2.125-.875T2 12t.875-2.125T5 9q.6 0 1.125.213t.925.587l7.025-4.1q-.05-.175-.062-.337T14 5q0-1.25.875-2.125T17 2t2.125.875T20 5t-.875 2.125T17 8q-.6 0-1.125-.213T14.95 7.2l-7.025 4.1q.05.175.063.338T8 12t-.012.363t-.063.337l7.025 4.1q.4-.375.925-.587T17 16q1.25 0 2.125.875T20 19t-.875 2.125T17 22m0-2q.425 0 .713-.287T18 19t-.288-.712T17 18t-.712.288T16 19t.288.713T17 20M5 13q.425 0 .713-.288T6 12t-.288-.712T5 11t-.712.288T4 12t.288.713T5 13m12-7q.425 0 .713-.288T18 5t-.288-.712T17 4t-.712.288T16 5t.288.713T17 6m0-1" />
+        </svg>
+      </div>
+
+      <!-- Product image -->
+      {% with product.images.all as images %}
+        {% if images %}
+          <img src="{{ images.0.image.url }}"
+            data-hover="{% if images|length > 1 %}{{ images.1.image.url }}{% else %}{{ images.0.image.url }}{% endif %}"
+            alt="{{ product.name }}" class="product-image w-full h-64 object-cover rounded-md" />
+        {% else %}
+          <img src="{% static 'images/default-product.jpg' %}" alt="No Image Available"
+            class="product-image w-full h-64 object-cover rounded-md" />
+        {% endif %}
+      {% endwith %}
+    </div>
+
+    <!-- Product info -->
+    <h3 class="mt-4 text-lg font-semibold">{{ product.name }}</h3>
+    <p class="text-sm text-gray-500">{{ product.material }}</p>
+
+    <div class="mt-1 flex items-center gap-2">
+      <span class="text-base font-bold text-[#bc9565]">₹ {{ product.offer }}</span>
+      <span class="text-sm text-gray-400 line-through">₹{{ product.price }}</span>
+      <span class="text-sm text-[red] font-medium">{{ product.discount }}</span>
+    </div>
+
+    <!-- Detail button -->
+    <button onclick="window.location.href='{% url 'product_detail' product.id %}'"
+      class="mt-4 w-full bg-[#bc9565] text-white py-2 rounded hover:bg-[#a27848] transition duration-300">
+      Detail View
+    </button>
+  </div>
+</a>
+{% endfor %}
+
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-10">
+    <a href="{% url 'product' %}">
+      <button
+        class="border border-[#bc9565] text-[#bc9565] px-6 py-2 rounded-md font-semibold hover:bg-[#bc9565] hover:text-white transition duration-300">
+        Explore More
+      </button>
+    </a>
+  </div>
+</section>
+
+
+
+
+  {% comment %} 
+  <div id="shareModal"
+    class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white rounded-xl p-6 w-80 relative shadow-lg">
+      <button onclick="closeShareModal()"
+        class="absolute top-2 right-2 text-gray-600 hover:text-black text-xl">&times;</button>
+      <h1 class="text-xl font-bold mb-6 text-center text-gray-800">Share this product</h1>
+
+      <div class="flex flex-col gap-4">
+
+        <a href="https://api.whatsapp.com/send?text=Check%20this%20product%20out:%20https://example.com/detail_product.html"
+          target="_blank"
+          class="flex items-center gap-3 px-4 py-2 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition">
+          <img src="https://img.icons8.com/color/48/000000/whatsapp--v1.png" alt="WhatsApp" class="w-6 h-6" />
+          <span>Share on WhatsApp</span>
+        </a>
+
+        <a href="https://www.facebook.com/sharer/sharer.php?u=https://example.com/detail_product.html" target="_blank"
+          class="flex items-center gap-3 px-4 py-2 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition">
+          <img src="https://img.icons8.com/color/48/000000/facebook-new.png" alt="Facebook" class="w-6 h-6" />
+          <span>Share on Facebook</span>
+        </a>
+
+        <a href="https://twitter.com/intent/tweet?url=https://example.com/detail_product.html" target="_blank"
+          class="flex items-center gap-3 px-4 py-2 rounded-lg bg-sky-100 text-sky-700 hover:bg-sky-200 transition">
+          <img src="https://img.icons8.com/ios-filled/50/1DA1F2/twitter.png" alt="Twitter/X" class="w-6 h-6" />
+          <span>Share on X</span>
+        </a>
+
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://example.com/detail_product.html"
+          target="_blank"
+          class="flex items-center gap-3 px-4 py-2 rounded-lg bg-blue-50 text-blue-800 hover:bg-blue-100 transition">
+          <img src="https://img.icons8.com/color/48/000000/linkedin.png" alt="LinkedIn" class="w-6 h-6" />
+          <span>Share on LinkedIn</span>
+        </a>
+
+      </div>
+    </div>
+  </div> {% endcomment %}
+
+ <!-- Share Modal -->
+<div id="shareModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-xl p-6 w-full max-w-sm relative shadow-lg animate-fadeIn">
+    
+    <!-- Close Button -->
+    <button id="closeShare" aria-label="Close share modal"
+      class="absolute top-2 right-2 text-gray-600 hover:text-black text-2xl leading-none focus:outline-none">
+      &times;
+    </button>
+
+    <!-- Title -->
+    <h1 class="text-xl font-bold mb-6 text-center text-gray-800">Share this product</h1>
+
+    <!-- Share Buttons -->
+    <div class="flex flex-col gap-4">
+      <a id="whatsappLink" target="_blank" rel="noopener noreferrer"
+        class="flex items-center gap-3 px-4 py-2 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition">
+        <img src="https://img.icons8.com/color/48/000000/whatsapp--v1.png" alt="WhatsApp" class="w-6 h-6" />
+        <span>Share on WhatsApp</span>
+      </a>
+
+      <a id="facebookLink" target="_blank" rel="noopener noreferrer"
+        class="flex items-center gap-3 px-4 py-2 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition">
+        <img src="https://img.icons8.com/color/48/000000/facebook-new.png" alt="Facebook" class="w-6 h-6" />
+        <span>Share on Facebook</span>
+      </a>
+
+      <a id="twitterLink" target="_blank" rel="noopener noreferrer"
+        class="flex items-center gap-3 px-4 py-2 rounded-lg bg-sky-100 text-sky-700 hover:bg-sky-200 transition">
+        <img src="https://img.icons8.com/ios-filled/50/1DA1F2/twitter.png" alt="Twitter" class="w-6 h-6" />
+        <span>Share on X</span>
+      </a>
+
+      <a id="linkedinLink" target="_blank" rel="noopener noreferrer"
+        class="flex items-center gap-3 px-4 py-2 rounded-lg bg-blue-50 text-blue-800 hover:bg-blue-100 transition">
+        <img src="https://img.icons8.com/color/48/000000/linkedin.png" alt="LinkedIn" class="w-6 h-6" />
+        <span>Share on LinkedIn</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+  <section class="bg-gray-50 py-16 px-6 md:px-20 mt-10">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+
+      <div>
+        <img src="./static/images/contact.jpg" alt="Cozy furniture" class="rounded-lg shadow-lg">
+      </div>
+
+      <div>
+        <p class="text-sm font-semibold text-[#bc9565] uppercase mb-2">About Us</p>
+
+        <h1 class="text-4xl font-bold leading-tight mb-8">
+          Handcrafted Pieces <br /> With Sustainable Materials
+        </h1>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+
+          <div class="flex flex-col items-center text-center">
+            <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-3">
+              <i class="fas fa-bolt text-[#bc9565] text-2xl"></i>
+            </div>
+            <h3 class="font-semibold mb-1">Fast Delivery</h3>
+            <p class="text-gray-600 text-sm">Your order arrives quickly so you can enjoy it right away.</p>
+          </div>
+
+          <div class="flex flex-col items-center text-center">
+            <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-3">
+              <i class="fas fa-sync-alt text-[#bc9565] text-2xl"></i>
+            </div>
+            <h3 class="font-semibold mb-1">Easy Returns</h3>
+            <p class="text-gray-600 text-sm">We make returns simple, quick and stress-free.</p>
+          </div>
+
+          <div class="flex flex-col items-center text-center">
+            <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-3">
+              <i class="fas fa-award text-[#bc9565] text-2xl"></i>
+            </div>
+            <h3 class="font-semibold mb-1">Premium Materials</h3>
+            <p class="text-gray-600 text-sm">Every piece is made from high-quality, lasting materials.</p>
+          </div>
+
+        </div>
+
+
+        <a href="about.html"
+          class="inline-block bg-[#bc9565]  text-white font-semibold px-6 py-3 rounded-lg transition-all">
+          Read More
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+
+
+
+
+
+
+
+  <section class="px-6 xl:px-0 py-12 max-w-7xl mx-auto mt-10" data-aos="fade-right">
+    <div class="text-center mb-10">
+      <h1 class="text-2xl md:text-4xl font-bold mb-2 uppercase">Our Services</h1>
+      <p class="text-gray-600 text-md">Experience end-to-end furniture solutions tailored to your space and lifestyle.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div
+        class="border border-[#bc9565] rounded-xl p-6 text-center transition-transform duration-300 ease-out hover:-translate-y-2 hover:shadow-xl">
+        <div class="text-[#bc9565] mb-4 flex justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
+            <path fill="#bc9565"
+              d="m5.85 12l-.3-1.5q-.3-.125-.562-.262T4.45 9.9L3 10.35l-1-1.7l1.15-1Q3.1 7.325 3.1 7t.05-.65L2 5.35l1-1.7l1.45.45q.275-.2.538-.338T5.55 3.5l.3-1.5h1l.3 1.5q.3.125.563.263t.537.337l1.45-.45l1 1.7l-1.15 1q.05.325.05.65t-.05.65l1.15 1l-1 1.7l-1.45-.45q-.275.2-.537.338t-.563.262l-.3 1.5zm1-3q.825 0 1.413-.587T8.85 7t-.587-1.412T6.85 5t-1.412.588T4.85 7t.588 1.413T6.85 9m7.95 14l-.45-2.1q-.425-.15-.787-.363t-.713-.487l-2 .65l-1.4-2.4l1.6-1.4Q11 16.45 11 16t.05-.9l-1.6-1.4l1.4-2.4l2 .65q.35-.275.713-.488t.787-.362L14.8 9h1.8l.45 2.1q.425.15.788.363t.712.487l2-.65l1.4 2.4l-1.6 1.4q.05.45.05.9t-.05.9l1.6 1.4l-1.4 2.4l-2-.65q-.35.275-.712.487t-.788.363L17.6 23zm1.4-4q1.25 0 2.125-.875T19.2 16t-.875-2.125T16.2 13t-2.125.875T13.2 16t.875 2.125T16.2 19" />
+          </svg>
+        </div>
+
+        <h3 class="font-semibold text-lg mb-2">Furniture Manufacturing</h3>
+        <p class="text-sm text-gray-600">We design and build custom furniture tailored to your space and preferences.
+        </p>
+      </div>
+
+      <div
+        class="border border-[#bc9565] rounded-xl p-6 text-center transition-transform duration-300 ease-out hover:-translate-y-2 hover:shadow-xl">
+        <div class="text-[#bc9565] mb-4 flex justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 2048 2048">
+            <path fill="#bc9565"
+              d="M1930 220q26 45 47 86t38 83t24 87t9 100q0 79-20 152t-58 138t-91 117t-117 90t-137 58t-153 21q-23 0-46-2t-47-6l-806 806q-48 48-109 73t-129 25q-69 0-130-26t-106-72t-72-107t-27-130q0-67 25-128t73-110l806-806q-4-23-6-46t-2-47q0-79 20-152t58-138t91-117t117-90t137-58t153-21q54 0 99 8t88 25t83 37t86 48l-394 394l102 102zm-458 804q93 0 174-35t142-96t96-142t36-175q0-73-24-141l-360 359l-282-282l359-360q-68-24-141-24q-93 0-174 35t-142 96t-96 142t-36 175q0 35 6 68t14 66l-855 856q-29 29-45 67t-16 80t16 80t45 66t66 44t80 17q42 0 80-16t67-45l856-855q33 8 66 14t68 6"
+              stroke-width="51" stroke="#bc9565" />
+          </svg>
+        </div>
+        <h3 class="font-semibold text-lg mb-2">Furniture Repair</h3>
+        <p class="text-sm text-gray-600">Restore the beauty and function of your old or damaged furniture with expert
+          repair services.</p>
+      </div>
+
+      <div
+        class="border border-[#bc9565] rounded-xl p-6 text-center transition-transform duration-300 ease-out hover:-translate-y-2 hover:shadow-xl">
+        <div class="text-[#bc9565] mb-4 flex justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
+            <path fill="#bc9565"
+              d="M5.5 2.25A1.75 1.75 0 0 0 3.75 4v3c0 .966.784 1.75 1.75 1.75h10A1.75 1.75 0 0 0 17.25 7v-.75h.25c.483 0 .815.09 1.003.213c.14.092.247.225.247.537v2c0 .69-.56 1.25-1.25 1.25h-7A1.75 1.75 0 0 0 8.75 12v8c0 .966.784 1.75 1.75 1.75h1a.75.75 0 0 0 0-1.5h-1a.25.25 0 0 1-.25-.25v-8a.25.25 0 0 1 .25-.25h7A2.75 2.75 0 0 0 20.25 9V7c0-.792-.34-1.41-.925-1.792c-.536-.35-1.204-.458-1.825-.458h-.25V4a1.75 1.75 0 0 0-1.75-1.75z" />
+          </svg>
+        </div>
+        <h3 class="font-semibold text-lg mb-2">Polishing & Refinishing</h3>
+        <p class="text-sm text-gray-600">Bring life back to your wood furniture with our professional polishing and
+          surface treatments.</p>
+      </div>
+
+      <div
+        class="border border-[#bc9565] rounded-xl p-6 text-center transition-transform duration-300 ease-out hover:-translate-y-2 hover:shadow-xl">
+        <div class="text-[#bc9565] mb-4 flex justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
+            <g fill="none" stroke="#bc9565" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+              <path
+                d="M16 6.25v9.51q-.18.225-.29.49H8.29a2.5 2.5 0 0 0-4.58 0H3a1 1 0 0 1-1-1v-9a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2m6 7.11v2.89h-1.71a2.49 2.49 0 0 0-4.29-.49V7.25h1.43a1 1 0 0 1 .86.49l.91 1.51l1.23 2.05a4 4 0 0 1 .57 2.06" />
+              <path
+                d="M8.5 17.25a2.5 2.5 0 1 1-4.79-1a2.5 2.5 0 0 1 4.79 1m12 0a2.5 2.5 0 1 1-4.79-1q.11-.265.29-.49a2.49 2.49 0 0 1 4.29.49c.14.315.212.656.21 1m-9.5-6H6m5-3H6" />
+            </g>
+          </svg>
+        </div>
+        <h3 class="font-semibold text-lg mb-2">Home Delivery & Setup</h3>
+        <p class="text-sm text-gray-600">We ensure safe delivery and professional installation of all furniture
+          purchases.</p>
+      </div>
+    </div>
+
+  </section>
+
+</div>
+
+
+
+<section class="bg-white py-14">
+  <div class="max-w-7xl mx-auto px-6">
+
+    <div class="text-center mb-14">
+      <h1 class="text-3xl md:text-4xl font-bold text-[#3b2f2f]">Our Commitment to Excellence</h1>
+      <p class="text-gray-600 mt-3">
+        From design to delivery, we guarantee the highest standards in every step.
+      </p>
+    </div>
+
+    <div class="relative flex flex-col sm:flex-row items-center sm:justify-between">
+
+      <div class="flex flex-col items-center text-center max-w-[220px]">
+        <div class="w-16 h-16 rounded-full bg-[#f4efe9] flex items-center justify-center mb-3 border border-[#bc9565]">
+          <i class="fas fa-shield-alt text-[#bc9565] text-2xl"></i>
+        </div>
+        <h3 class="font-semibold text-lg mb-1">5-Year Warranty</h3>
+        <p class="text-sm text-gray-600">Peace of mind with long-term protection.</p>
+      </div>
+
+      <div class="hidden sm:block flex-1 h-[2px] bg-[#e5ded1] mx-4"></div>
+
+      <div class="flex flex-col items-center text-center max-w-[220px]">
+        <div class="w-16 h-16 rounded-full bg-[#f4efe9] flex items-center justify-center mb-3 border border-[#bc9565]">
+          <i class="fas fa-award text-[#bc9565] text-2xl"></i>
+        </div>
+        <h3 class="font-semibold text-lg mb-1">Premium Quality</h3>
+        <p class="text-sm text-gray-600">Every piece meets strict quality checks.</p>
+      </div>
+
+      <div class="hidden sm:block flex-1 h-[2px] bg-[#e5ded1] mx-4"></div>
+
+      <div class="flex flex-col items-center text-center max-w-[220px]">
+        <div class="w-16 h-16 rounded-full bg-[#f4efe9] flex items-center justify-center mb-3 border border-[#bc9565]">
+          <i class="fas fa-leaf text-[#bc9565] text-2xl"></i>
+        </div>
+        <h3 class="font-semibold text-lg mb-1">Sustainable</h3>
+        <p class="text-sm text-gray-600">Crafted from eco-friendly materials.</p>
+      </div>
+
+      <div class="hidden sm:block flex-1 h-[2px] bg-[#e5ded1] mx-4"></div>
+
+      <div class="flex flex-col items-center text-center max-w-[220px]">
+        <div class="w-16 h-16 rounded-full bg-[#f4efe9] flex items-center justify-center mb-3 border border-[#bc9565]">
+          <i class="fas fa-tools text-[#bc9565] text-2xl"></i>
+        </div>
+        <h3 class="font-semibold text-lg mb-1">Expert Craft</h3>
+        <p class="text-sm text-gray-600">Handmade by skilled artisans.</p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+
+
+
+
+<section
+  class="relative bg-fixed bg-center bg-cover bg-no-repeat h-[300px] md:h-[400px] flex items-center justify-center text-white mt-10"
+  style="background-image: url('./static/images/aboutbg.jpg');">
+  <div class="bg-black/50 w-full h-full absolute top-0 left-0 z-0"></div>
+
+  <div class="relative z-10 text-center px-4 md:px-8">
+    <h1 class="text-3xl md:text-5xl font-bold mb-4 uppercase">Visit Our Showroom</h1>
+    <p class="text-md mb-6 max-w-2xl mx-auto">
+      Experience our craftsmanship up close. Try, explore and get inspired.
+    </p>
+    <a href="contact.html"
+      class="inline-block bg-white text-[#4b3f2f] hover:bg-[#e0d4c1] font-semibold py-3 px-6 rounded-lg transition-all duration-300">
+      Contact Us
+    </a>
+  </div>
+</section>
+
+
+
+
+{% endblock %}

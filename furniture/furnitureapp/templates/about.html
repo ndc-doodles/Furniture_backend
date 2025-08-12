@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FurniCraft - Home</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./static/css/style.css" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500&family=Lato:wght@700;900&display=swap" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+
+  <style>
+    
+  </style>
+</head>
+
+<body class="bg-white  relative">
+
+  <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden"></div>
+
+<header class="relative bg-cover bg-center h-[40vh] md:h-[70vh]" style="background-image: url('./static/images/aboutbg.jpg');">
+    <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+
+<nav id="navbar" class="fixed top-0 left-0 w-full z-50 px-6 py-4 md:px-24 transition-all duration-300">
+  <div class="flex justify-between items-center w-full">
+    
+    <a href="{% url 'index' %}" id="brand" class="transition-all block">
+      <img src="./static/images/logo.png" alt="FurniCraft Logo" class="h-10 md:h-12" />
+    </a>
+
+    <ul id="navLinks" class="hidden md:flex items-center space-x-8 py-6 text-white text-[14px] font-semibold uppercase transition-all">
+      <li><a href="{% url 'index' %}" class="hover:text-[#bc9565]">Home</a></li>
+      
+      <li class="relative group">
+  <a href="{% url 'product' %}" class="hover:text-[#bc9565]">Our Products</a>
+
+        <ul class="text-white absolute left-0 top-full mt-2 bg-black/60 shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 grid grid-cols-4 gap-4 p-4 min-w-[500px]">
+    <!-- All categories -->
+    <li>
+        <a href="{% url 'product' %}" 
+           class="block hover:underline decoration-[#bc9565] {% if not selected_category %}text-[#bc9565]{% endif %}">
+           All
+        </a>
+    </li>
+
+    <!-- Loop through categories -->
+    {% for cat in categories %}
+    <li>
+        <a href="{% url 'product' %}?category={{ cat.id }}" 
+           class="block hover:underline decoration-[#bc9565] {% if selected_category == cat.id|stringformat:'s' %}text-[#bc9565]{% endif %}">
+           {{ cat.name }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+
+
+</li>
+
+
+      <li><a href="{% url 'about' %}" class="text-[#bc9565]">About</a></li>
+      <li><a href="{%  url 'contact' %}" class="hover:text-[#bc9565]">Contact</a></li>
+
+      <li>
+        <a href="tel:+919447182559" class="bg-[#bc9565] text-white px-3 py-2 rounded hover:bg-[#a07f52] transition-all">+91 9447182559</a>
+
+      </li>
+
+     <li class="flex space-x-4 items-center">
+  <a href="#" class="hover:text-[#bc9565]">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M19.05 4.91A9.82 9.82 0 0 0 12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01m-7.01 15.24c-1.48 0-2.93-.4-4.2-1.15l-.3-.18l-3.12.82l.83-3.04l-.2-.31a8.26 8.26 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24c2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c.02 4.54-3.68 8.23-8.22 8.23m4.52-6.16c-.25-.12-1.47-.72-1.69-.81c-.23-.08-.39-.12-.56.12c-.17.25-.64.81-.78.97c-.14.17-.29.19-.54.06c-.25-.12-1.05-.39-1.99-1.23c-.74-.66-1.23-1.47-1.38-1.72c-.14-.25-.02-.38.11-.51c.11-.11.25-.29.37-.43s.17-.25.25-.41c.08-.17.04-.31-.02-.43s-.56-1.34-.76-1.84c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31c-.22.25-.86.85-.86 2.07s.89 2.4 1.01 2.56c.12.17 1.75 2.67 4.23 3.74c.59.26 1.05.41 1.41.52c.59.19 1.13.16 1.56.1c.48-.07 1.47-.6 1.67-1.18c.21-.58.21-1.07.14-1.18s-.22-.16-.47-.28"/>
+    </svg>
+  </a>
+
+  <a href="#" class="hover:text-[#bc9565]">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+      <circle cx="17" cy="7" r="1.5" fill="currentColor"/>
+      <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+        <path d="M16 3c2.76 0 5 2.24 5 5v8c0 2.76-2.24 5-5 5h-8c-2.76 0-5-2.24-5-5v-8c0-2.76 2.24-5 5-5h4Z"/>
+        <path d="M12 8c2.21 0 4 1.79 4 4c0 2.21-1.79 4-4 4c-2.21 0-4-1.79-4-4c0-2.21 1.79-4 4-4"/>
+      </g>
+    </svg>
+  </a>
+
+  <a href="#" class="hover:text-[#bc9565]">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95"/>
+    </svg>
+  </a>
+</li>
+
+
+    </ul>
+
+    <div class="md:hidden z-50">
+      <button id="menuBtn" class="text-white text-2xl transition-all">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<div id="mobileMenu" class="fixed top-0 right-0 h-full w-3/4 bg-black bg-opacity-95 text-white text-lg z-[9999] hidden">
+  <div class="flex justify-end px-4 pt-4">
+    <button id="closeBtn" class="text-3xl font-bold focus:outline-none">&times;</button>
+  </div>
+  <ul class="flex flex-col items-start space-y-6 p-6 pt-10 uppercase text-[14px] font-semibold">
+    <li><a href="{% url 'index' %}" class="hover:text-[#bc9565]">Home</a></li>
+    <li><a href="{% url 'product' %}" class="hover:text-[#bc9565]">Our Products</a></li>
+    <li><a href="{% url 'about' %}" class="text-[#bc9565]">About</a></li>
+    <li><a href="{%  url 'contact' %}" class="hover:text-[#bc9565]">Contact</a></li>
+    <li><a href="tel:+1234567890" class="bg-[#bc9565] text-white px-3 py-1 rounded hover:bg-[#a07f52] transition-all">+1 234 567 890</a></li>
+    
+     <li class="flex space-x-4 items-center">
+  <a href="#" class="hover:text-[#bc9565]">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M19.05 4.91A9.82 9.82 0 0 0 12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01m-7.01 15.24c-1.48 0-2.93-.4-4.2-1.15l-.3-.18l-3.12.82l.83-3.04l-.2-.31a8.26 8.26 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24c2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c.02 4.54-3.68 8.23-8.22 8.23m4.52-6.16c-.25-.12-1.47-.72-1.69-.81c-.23-.08-.39-.12-.56.12c-.17.25-.64.81-.78.97c-.14.17-.29.19-.54.06c-.25-.12-1.05-.39-1.99-1.23c-.74-.66-1.23-1.47-1.38-1.72c-.14-.25-.02-.38.11-.51c.11-.11.25-.29.37-.43s.17-.25.25-.41c.08-.17.04-.31-.02-.43s-.56-1.34-.76-1.84c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31c-.22.25-.86.85-.86 2.07s.89 2.4 1.01 2.56c.12.17 1.75 2.67 4.23 3.74c.59.26 1.05.41 1.41.52c.59.19 1.13.16 1.56.1c.48-.07 1.47-.6 1.67-1.18c.21-.58.21-1.07.14-1.18s-.22-.16-.47-.28"/>
+    </svg>
+  </a>
+
+  <a href="#" class="hover:text-[#bc9565]">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+      <circle cx="17" cy="7" r="1.5" fill="currentColor"/>
+      <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+        <path d="M16 3c2.76 0 5 2.24 5 5v8c0 2.76-2.24 5-5 5h-8c-2.76 0-5-2.24-5-5v-8c0-2.76 2.24-5 5-5h4Z"/>
+        <path d="M12 8c2.21 0 4 1.79 4 4c0 2.21-1.79 4-4 4c-2.21 0-4-1.79-4-4c0-2.21 1.79-4 4-4"/>
+      </g>
+    </svg>
+  </a>
+
+  <a href="#" class="hover:text-[#bc9565]">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95"/>
+    </svg>
+  </a>
+</li>
+  </ul>
+</div>
+
+
+    <div class="relative z-10 flex flex-col justify-center items-center h-full px-6 md:px-20 text-white text-center">
+      <h1 class="text-4xl md:text-6xl font-lato font-bold mb-4 uppercase text-center" style="line-height: 1.3;">
+        ABOUT
+      </h1>
+      <p class="text-lg md:text-xl max-w-xl mt-2">
+  <a href="{% url 'index' %}" class=" hover:underline">Home</a> / About
+</p>
+
+    </div>
+  </header>
+
+
+
+
+
+<section class="bg-white px-6 md:px-24 py-12">
+  <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+    <div class="lg:w-1/2 mb-8 lg:mb-0">
+      <p class="text-[#bc9565] font-semibold mb-2">Discover Elegance</p>
+      <h1 class="text-3xl md:text-4xl font-bold text-black leading-tight mb-2">
+        We craft timeless
+      </h1>
+      <h1 class="text-3xl md:text-4xl font-semibold text-gray-500 leading-tight">
+        furniture for your space
+      </h1>
+    </div>
+
+    <div class="lg:w-1/2 text-gray-600 text-base md:text-lg">
+      <p>
+        At Wood & Soul, we blend craftsmanship with creativity to design furniture that transforms houses into homes. Built to last and made to inspire, every piece tells a story of comfort and style.
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="w-full h-[300px] md:h-[350px] overflow-hidden rounded-xl max-md:hidden">
+      <img src="./static/images/about1.jpg" alt="Modern Living Room" class="w-full h-full object-cover" />
+    </div>
+
+    <div class="w-full h-[300px] md:h-[350px] overflow-hidden rounded-xl">
+      <img src="./static/images/about2.jpg" alt="Crafted Chair" class="w-full h-full object-cover" />
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+<section class="bg-white py-16 px-6 md:px-16 max-md:py-10">
+  <div class="max-w-7xl mx-auto text-center space-y-8">
+    <h2 class="text-3xl md:text-4xl font-bold text-[#2e2e2e]">Our Mission & Values</h2>
+    <p class="text-gray-700 text-md max-w-3xl mx-auto">
+      We’re committed to building furniture that’s not only beautiful - but also responsible. Our mission is to deliver timeless, durable designs through sustainable practices and customer-first values.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left w-full mx-auto">
+      
+      <div class="p-6 bg-[#bc9565]/10 rounded-lg shadow-sm flex items-start gap-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="max-md:w-20 w-12" viewBox="0 0 32 32"><path fill="#bc9565" d="M21.57 27.75A12.9 12.9 0 0 1 16 29C8.832 29 3 23.168 3 16c0-3.075 1.057-5.979 3-8.308V10h2V4H2v2h2.842A14.86 14.86 0 0 0 1 16c0 8.271 6.729 15 15 15a14.9 14.9 0 0 0 6.43-1.444z"/><path fill="#bc9565" d="M21 9c-3.16 0-5.751 2.457-5.978 5.56A5.97 5.97 0 0 0 11 13H7v4c0 3.309 2.692 6 6 6h2v4h2v-8h2c3.308 0 6-2.691 6-6V9zm-8 12c-2.206 0-4-1.794-4-4v-2h2c2.206 0 4 1.794 4 4v.586l-2.293-2.293l-1.414 1.414L13.586 21zm10-8c0 2.206-1.794 4-4 4h-.586l2.293-2.293l-1.414-1.414L17 15.586V15c0-2.206 1.794-4 4-4h2z"/><path fill="#bc9565" d="M31 16c0-8.271-6.729-15-15-15a14.9 14.9 0 0 0-6.43 1.444l.86 1.806A12.9 12.9 0 0 1 16 3c7.168 0 13 5.832 13 13c0 3.075-1.057 5.979-3 8.308V22h-2v6h6v-2h-2.842A14.86 14.86 0 0 0 31 16"/></svg>
+        <div>
+          <h3 class="font-semibold text-xl mb-1 text-[#4b3f2f]">Sustainability</h3>
+          <p class="text-gray-600">We use responsibly sourced wood and eco-friendly processes to reduce our environmental footprint.</p>
+        </div>
+      </div>
+
+      <div class="p-6 bg-[#bc9565]/10 rounded-lg shadow-sm flex items-start gap-4">
+       <svg xmlns="http://www.w3.org/2000/svg" class="max-md:w-20 w-12" viewBox="0 0 16 16"><path fill="#bc9565" fill-rule="evenodd" d="M14 2H2v7a6 6 0 0 0 12 0zM5.854 7.146l-.708.708L7.5 10.207l3.854-3.853l-.707-.708L7.5 8.793z" clip-rule="evenodd"/></svg>
+        <div>
+          <h3 class="font-semibold text-xl mb-1 text-[#4b3f2f]">Durability</h3>
+          <p class="text-gray-600">Each piece is built to withstand the test of time - strong, sturdy and dependable.</p>
+        </div>
+      </div>
+
+
+  <script src="./static/js/script.js"></script>
+      <div class="p-6 bg-[#bc9565]/10 rounded-lg shadow-sm flex items-start gap-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="max-md:w-20 w-12" viewBox="0 0 640 512"><path fill="#bc9565" d="m323.4 85.2l-96.8 78.4c-16.1 13-19.2 36.4-7 53.1c12.9 17.8 38 21.3 55.3 7.8l99.3-77.2c7-5.4 17-4.2 22.5 2.8s4.2 17-2.8 22.5L373 188.8L550.2 352H592c26.5 0 48-21.5 48-48V176c0-26.5-21.5-48-48-48h-80.7l-3.9-2.5L434.8 79c-15.3-9.8-33.2-15-51.4-15c-21.8 0-43 7.5-60 21.2m22.8 124.4l-51.7 40.2c-31.5 24.6-77.2 18.2-100.8-14.2c-22.2-30.5-16.6-73.1 12.7-96.8l83.2-67.3c-11.6-4.9-24.1-7.4-36.8-7.4C234 64 215.7 69.6 200 80l-72 48H48c-26.5 0-48 21.5-48 48v128c0 26.5 21.5 48 48 48h108.2l91.4 83.4c19.6 17.9 49.9 16.5 67.8-3.1c5.5-6.1 9.2-13.2 11.1-20.6l17 15.6c19.5 17.9 49.9 16.6 67.8-2.9c4.5-4.9 7.8-10.6 9.9-16.5c19.4 13 45.8 10.3 62.1-7.5c17.9-19.5 16.6-49.9-2.9-67.8z" stroke-width="13" stroke="#bc9565"/></svg>
+        <div>
+          <h3 class="font-semibold text-xl mb-1 text-[#4b3f2f]">Local Sourcing</h3>
+          <p class="text-gray-600">We collaborate with local craftsmen and vendors to support the community and ensure quality.</p>
+        </div>
+      </div>
+
+      <div class="p-6 bg-[#bc9565]/10 rounded-lg shadow-sm flex items-start gap-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="max-md:w-20 w-12" viewBox="0 0 512 512"><path fill="#bc9565" fill-rule="evenodd" d="M309.334 117.333c0-41.237-33.43-74.666-74.667-74.666l-4.097.11C191.238 44.904 160 77.471 160 117.333C160 158.571 193.43 192 234.667 192l4.097-.111c39.332-2.126 70.57-34.693 70.57-74.556M256 362.667c0 23.314 6.233 45.173 17.124 64H85.334v-76.8c0-62.033 47.668-112.614 107.383-115.104l4.616-.096H272c19.434 0 37.712 5.091 53.642 14.047C284.293 269.933 256 312.996 256 362.667m65.303 86.295L384 410.667l62.697 38.295l-17.046-71.463l55.795-47.794l-73.232-5.871L384 256l-28.214 67.834l-73.232 5.871l55.795 47.794z" clip-rule="evenodd" stroke-width="13" stroke="#bc9565"/></svg>
+        <div>
+          <h3 class="font-semibold text-xl mb-1 text-[#4b3f2f]">Customer First</h3>
+          <p class="text-gray-600">Your satisfaction is our top priority - from customization to delivery and beyond.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+  <footer class="bg-black text-white px-6 md:px-20 py-20">
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
+    <div>
+      <img src="/static/images/logo11.png" alt="Logo" class="w-44 mb-4">
+      <p class="text-md text-gray-300">
+        We offer end-to-end furniture manufacturing, repair and polishing services to bring your spaces to life.
+      </p>
+    </div>
+
+    <div>
+      <h1 class="text-lg font-semibold mb-4 uppercase">Our Services</h1>
+      <ul class="space-y-4 text-sm text-gray-300 font-lato">
+        <li><a href="#" class="hover:text-white">Furniture Manufacturing</a></li>
+        <li><a href="#" class="hover:text-white">Furniture Repair</a></li>
+        <li><a href="#" class="hover:text-white">Polishing & Refinishing</a></li>
+        <li><a href="#" class="hover:text-white">Home Delivery & Setup</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="text-lg font-semibold mb-4 uppercase">Quick Links</h3>
+      <ul class="space-y-4 text-sm text-gray-300 ">
+        <li><a href="{% url 'index' %}" class="hover:text-white">Home</a></li>
+        <li><a href="{% url 'product' %}" class="hover:text-white">Our Products</a></li>
+        <li><a href="{% url 'about' %}" class="hover:text-white">About</a></li>
+        <li><a href="{%  url 'contact' %}" class="hover:text-white">Contact</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="text-lg font-semibold mb-4 uppercase">Follow Us</h3>
+      <div class="flex space-x-4">
+        <a href="#" class="text-gray-300 hover:text-white">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="#" class="text-gray-300 hover:text-white">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="#" class="text-gray-300 hover:text-white">
+          <i class="fab fa-twitter"></i>
+        </a>
+        <a href="#" class="text-gray-300 hover:text-white">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <hr class="border-gray-600 mb-6" />
+
+  <div class="text-center text-sm text-gray-400">
+    © 2025 All Rights Reserved. Powered by <span class="text-white font-semibold">Cybexel</span>
+  </div>
+</footer>
+
+  <script src="./static/js/script.js"></script>
+
+  </body>
+  </html>

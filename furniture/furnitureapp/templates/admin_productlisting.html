@@ -1,0 +1,295 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - Cybexel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+</head>
+
+<body class="bg-white text-[#151a37] font-sans">
+
+  <div class="flex min-h-screen">
+
+
+
+    <div id="sidebar"
+      class="fixed top-0 left-0 h-full w-64 bg-[#bc9565] text-white p-6 z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+      <div class="flex items-center justify-between mb-6">
+        <div class="w-full bg-white flex justify-center">
+          <img src="./static/images/logo.png" alt="Logo" class="w-32 h-32 object-contain">
+        </div>
+        <button onclick="toggleSidebar()" class="md:hidden text-white text-2xl">&times;</button>
+      </div>
+      <nav>
+        <ul class="space-y-4 text-sm">
+          <li>
+            <a href="{% url 'dashboard' %}"
+              class="block py-2 px-4 rounded hover:bg-white hover:text-[#151a37]">Dashboard</a>
+          </li>
+          <li>
+            <a href="{% url 'category' %}"
+              class="block py-2 px-4 rounded hover:bg-white hover:text-[#151a37]">Categories</a>
+          </li>
+          <li>
+            <a href="{% url 'listing' %}" class="block py-2 px-4 rounded bg-white text-[#151a37]">Product listing</a>
+          </li>
+          <li>
+            <a href="{% url 'admin_enquiry' %}"
+              class="block py-2 px-4 rounded hover:bg-white hover:text-[#151a37]">Enquiry Form Submissions</a>
+          </li>
+          <li>
+            <a href="{% url 'admin_contact' %}"
+              class="block py-2 px-4 rounded hover:bg-white hover:text-[#151a37]">Contact Form Submissions</a>
+          </li>
+          <li>
+            <a href="{% url 'logout' %}" class="block py-2 px-4 rounded bg-[red] text-white">Logout</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <button onclick="toggleSidebar()"
+      class="md:hidden fixed top-4 left-4 z-50 bg-[#bc9565] text-white p-2 rounded shadow-lg">
+      &#9776;
+    </button>
+
+
+    <div class="flex-1 ml-0 md:ml-64 p-6 overflow-x-hidden py-20">
+      <form method="POST" id="productForm" class="space-y-4 max-w-7xl mx-auto bg-white p-6 rounded-lg" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h2 class="text-xl font-semibold mb-4">Add New Product</h2>
+    <input type="hidden" name="action" value="add" />
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <input type="text" name="name" placeholder="Product Name" class="border p-2 rounded w-full" required />
+      <input type="text" name="subsentence" placeholder="Subsentence" class="border p-2 rounded w-full" />
+      <input type="text" name="material" placeholder="Material" class="border p-2 rounded w-full" />
+      
+      <select name="category" class="border p-2 rounded w-full" required>
+        <option value="">Select Category</option>
+        {% for category in categories %}
+          <option value="{{ category.id }}">{{ category.name }}</option>
+        {% endfor %}
+      </select>
+
+      <input type="number" name="price" placeholder="Price" class="border p-2 rounded w-full" required />
+      <input type="text" name="offer" placeholder="Offer" class="border p-2 rounded w-full" />
+      <input type="text" name="discount" placeholder="Discount" class="border p-2 rounded w-full" />
+      <input type="text" name="dimension" placeholder="Dimensions" class="border p-2 rounded w-full" />
+      <input type="text" name="color" placeholder="Color" class="border p-2 rounded w-full" />
+      <input type="text" name="weight" placeholder="Weight" class="border p-2 rounded w-full" />
+      <input type="text" name="seating_capacity" placeholder="Seating Capacity" class="border p-2 rounded w-full" />
+      <input type="text" name="warranty" placeholder="Warranty" class="border p-2 rounded w-full" />
+      <select name="availability" class="border p-2 rounded w-full" required>
+        <option value="">Select Availability</option>
+        <option value="in_stock">In Stock</option>
+        <option value="out_of_stock">Out of Stock</option>
+      </select>
+      <input type="text" name="return_policy" placeholder="Return Policy" class="border p-2 rounded w-full" />
+      <input type="text" name="description" placeholder="Description" class="border p-2 rounded w-full" />
+    </div>
+    <input type="file" id="imageInput" accept="image/*" multiple class="border p-2 rounded w-full" name="images" />
+    <button type="submit" class="bg-[#bc9565] text-white px-4 py-2 rounded hover:bg-[#a47c4a]">Add Product</button>
+      </form>
+      <div class="overflow-x-auto">
+        <table id="productTable" class="w-full min-w-[1300px] border border-gray-200 text-sm">
+          <thead class="bg-[#bc9565] text-white">
+            <tr>
+              <th class="p-2 text-left">Image</th>
+              <th class="p-2 text-left">Name</th>
+              <th class="p-2 text-left">Material</th>
+              <th class="p-2 text-left">Price</th>
+              <th class="p-2 text-left">Dimensions</th>
+              <th class="p-2 text-left">Color</th>
+              <th class="p-2 text-left">Weight</th>
+              <th class="p-2 text-left">Seating</th>
+              <th class="p-2 text-left">Warranty</th>
+              <th class="p-2 text-left">Availability</th>
+              <th class="p-2 text-left">Return</th>
+              <th class="p-2 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white">
+            {% for product in products %}
+            <tr 
+  data-product-id="{{ product.id }}"
+  data-category-id="{{ product.category.id }}"
+  data-name="{{ product.name }}"
+  data-subsentence="{{ product.subsentence }}"
+  data-material="{{ product.material }}"
+  data-price="{{ product.price }}"
+  data-offer="{{ product.offer }}"
+  data-discount="{{ product.discount }}"
+  data-dimension="{{ product.dimension }}"
+  data-color="{{ product.color }}"
+  data-weight="{{ product.weight }}"
+  data-seating="{{ product.seating_capacity }}"
+  data-warranty="{{ product.warranty }}"
+  data-availability="{{ product.availability }}"
+  data-return-policy="{{ product.return_policy }}"
+  data-description="{{ product.description }}"
+  data-images='[{% for img in product.images.all %}"{{ img.image.url }}"{% if not forloop.last %}, {% endif %}{% endfor %}]'
+>
+
+              <td>
+                {% if product.images.all %}
+                {% with product.images.all|first as first_image %}
+                <img src="{{ first_image.image.url }}" alt="{{ product.name }}" class="h-12 w-12 object-contain" />
+                {% endwith %}
+                {% else %}
+                <span class="text-gray-400">No Image</span>
+                {% endif %}
+              </td>
+
+
+              <td>{{ product.name }}</td>
+              <td>{{ product.material }}</td>
+              <td>{{ product.price }}</td>
+              <td>{{ product.dimension }}</td>
+              <td>{{ product.color }}</td>
+              <td>{{ product.weight }}</td>
+              <td>{{ product.seating_capacity }}</td>
+              <td>{{ product.warranty }}</td>
+              <td>{{ product.availability }}</td>
+              <td>{{ product.return_policy }}</td>
+              <td>
+                <button onclick="editRow(this)"
+                  class="px-3 py-1 rounded bg-blue-600 text-white text-sm hover:bg-blue-700 transition">
+                  Edit
+                </button>
+
+                <form method="POST" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="delete" />
+                  <input type="hidden" name="product_id" value="{{ product.id }}" />
+                  <button type="submit"
+                    class="px-3 py-1 rounded bg-red-600 text-white text-sm hover:bg-red-700 transition">
+                    Delete
+                  </button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+
+
+
+<!-- EDIT PRODUCT MODAL -->
+<div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
+  <div class="bg-white p-6 rounded-lg w-[90%] max-w-3xl overflow-auto max-h-[90vh]">
+    <h2 class="text-lg font-bold mb-4">Edit Product</h2>
+    <form id="editProductForm" method="POST" enctype="multipart/form-data" action="{% url 'listing' %}" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="edit" />
+      <input type="hidden" id="editProductId" name="product_id" value="" />
+
+      <input type="text" id="editName" name="name" class="border p-2 rounded" placeholder="Product Name" required />
+      <input type="text" id="editSubsentence" name="subsentence" class="border p-2 rounded" placeholder="Subsentence" />
+
+      <select id="editCategory" name="category" class="border p-2 rounded w-full" required>
+        <option value="">Select Category</option>
+        {% for category in categories %}
+          <option value="{{ category.id }}">{{ category.name }}</option>
+        {% endfor %}
+      </select>
+
+      <input type="number" id="editPrice" name="price" class="border p-2 rounded" placeholder="Price" required />
+      <input type="text" id="editOffer" name="offer" class="border p-2 rounded" placeholder="Offer" />
+      <input type="text" id="editDiscount" name="discount" class="border p-2 rounded" placeholder="Discount" />
+      <input type="text" id="editMaterial" name="material" class="border p-2 rounded" placeholder="Material" />
+      <input type="text" id="editDimension" name="dimension" class="border p-2 rounded" placeholder="Dimension" />
+      <input type="text" id="editColor" name="color" class="border p-2 rounded" placeholder="Color" />
+      <input type="text" id="editWeight" name="weight" class="border p-2 rounded" placeholder="Weight" />
+      <input type="text" id="editSeating" name="seating_capacity" class="border p-2 rounded" placeholder="Seating Capacity" />
+      <input type="text" id="editWarranty" name="warranty" class="border p-2 rounded" placeholder="Warranty" />
+
+      <select id="editAvailability" name="availability" class="border p-2 rounded w-full" required>
+        <option value="">Select Availability</option>
+        <option value="in_stock">In Stock</option>
+        <option value="out_of_stock">Out of Stock</option>
+      </select>
+
+      <input type="text" id="editReturnPolicy" name="return_policy" class="border p-2 rounded" placeholder="Return Policy" />
+      <input type="text" id="editDescription" name="description" class="border p-2 rounded md:col-span-2" placeholder="Description" />
+
+      <input type="file" id="editImageInput" name="images" accept="image/*" multiple class="border p-2 rounded w-full md:col-span-2" />
+
+      <div id="editPreviewContainer" class="md:col-span-2 flex flex-wrap gap-2 mt-2"></div>
+
+      <div class="md:col-span-2 flex justify-end gap-2 mt-4">
+        <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-400 text-white rounded">Cancel</button>
+        <button type="submit" class="px-4 py-2 bg-[#bc9565] text-white rounded">Update</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<script>
+function editRow(button) {
+  const row = button.closest("tr");
+
+  document.getElementById('editProductId').value = row.dataset.productId;
+  document.getElementById("editName").value = row.dataset.name || "";
+  document.getElementById("editSubsentence").value = row.dataset.subsentence || "";
+  document.getElementById("editMaterial").value = row.dataset.material || "";
+  document.getElementById("editPrice").value = row.dataset.price || "";
+  document.getElementById("editOffer").value = row.dataset.offer || "";
+  document.getElementById("editDiscount").value = row.dataset.discount || "";
+  document.getElementById("editDimension").value = row.dataset.dimension || "";
+  document.getElementById("editColor").value = row.dataset.color || "";
+  document.getElementById("editWeight").value = row.dataset.weight || "";
+  document.getElementById("editSeating").value = row.dataset.seating || "";
+  document.getElementById("editWarranty").value = row.dataset.warranty || "";
+  document.getElementById("editAvailability").value = row.dataset.availability || "";
+  document.getElementById("editReturnPolicy").value = row.dataset.returnPolicy || "";
+  document.getElementById("editDescription").value = row.dataset.description || "";
+  document.getElementById("editCategory").value = row.dataset.categoryId || "";
+
+  // Preview Images
+  const previewContainer = document.getElementById("editPreviewContainer");
+  previewContainer.innerHTML = "";
+  try {
+    const images = JSON.parse(row.dataset.images || "[]");
+    if (images.length > 0) {
+      images.forEach(url => {
+        const img = document.createElement("img");
+        img.src = url;
+        img.classList.add("h-20", "w-20", "object-cover", "rounded");
+        previewContainer.appendChild(img);
+      });
+    }
+  } catch (err) {
+    console.error("Image parsing failed", err);
+  }
+
+  // Show modal
+  const modal = document.getElementById("editModal");
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+}
+
+function closeEditModal() {
+  const modal = document.getElementById("editModal");
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+}
+</script>
+
+
+
+
+  </div>
+  <script src="{% static 'js/admin_scripts.js'  %}"></script>
+</body>
+
+</html>
