@@ -34,8 +34,16 @@ from django.contrib.auth.decorators import login_required
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '').strip()
+
+        # Block if username or password contains a link
+        link_pattern = re.compile(r'(https?://|www\.)', re.IGNORECASE)
+        if link_pattern.search(username) or link_pattern.search(password):
+            return render(request, 'admin_login.html', {
+                'error': 'Links are not allowed in username or password.',
+                'username': username
+            })
 
         try:
             user = Register.objects.get(username=username)
@@ -44,12 +52,17 @@ def login_view(request):
                 request.session['username'] = user.username
                 return redirect('dashboard')
             else:
-                return render(request, 'admin_login.html', {'error': 'Incorrect password'})
+                return render(request, 'admin_login.html', {
+                    'error': 'Incorrect password',
+                    'username': username
+                })
         except Register.DoesNotExist:
-            return render(request, 'admin_login.html', {'error': 'User not found'})
+            return render(request, 'admin_login.html', {
+                'error': 'User not found',
+                'username': username
+            })
 
     return render(request, 'admin_login.html')
-
 
 
 def logout_view(request):
@@ -433,7 +446,9 @@ def category(request):
 
 from django.shortcuts import render, redirect
 from django.templatetags.static import static
+import re
 
+ALLOWED_PATTERN = re.compile(r'^[a-zA-Z0-9\s\.,\'"@]+$')
 
 def contact(request):
     if request.method == "POST":
@@ -442,28 +457,33 @@ def contact(request):
         subject = request.POST.get("subject", "").strip()
         message = request.POST.get("message", "").strip()
 
-        # Optional: simple validation
-        if name and email and subject and message:
-            Contact.objects.create(
-                name=name,
-                email=email,
-                subject=subject,
-                message=message,
-            )
-            # Redirect or clear form after success
-            return redirect('contact')  # or render with success message
-        else:
-            error = "Please fill all the fields."
+        # Validation: fields must not be empty
+        if not all([name, email, subject, message]):
+            messages.error(request, "Please fill all the fields.")
+            return redirect('contact')
 
-            # Return the form with previous data and error message
-            context = {
-                "error": error,
-                "name": name,
-                "email": email,
-                "subject": subject,
-                "message": message,
-            }
-            return render(request, "contact.html", context)
+        # Validation: no disallowed characters
+        for field_value, field_name in [
+            (name, "Name"),
+            (subject, "Subject"),
+            (message, "Message")
+        ]:
+            if not ALLOWED_PATTERN.match(field_value):
+                messages.error(
+                    request,
+                    f"{field_name} contains invalid characters. Only letters, numbers, spaces, and . , ' \" @ are allowed."
+                )
+                return redirect('contact')
+
+        # Save to DB if valid
+        Contact.objects.create(
+            name=name,
+            email=email,
+            subject=subject,
+            message=message,
+        )
+        messages.success(request, "Your message has been sent successfully!")
+        return redirect('contact')
 
     return render(request, "contact.html")
 
@@ -534,21 +554,32 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.templatetags.static import static
 from .models import Product, Enquiry
 
+
+def safe_decimal(value, default=Decimal("0.00")):
+    """Safely convert to Decimal, returning default if invalid."""
+    try:
+        if value is None or str(value).strip() == "":
+            return default
+        return Decimal(str(value))
+    except (InvalidOperation, ValueError, TypeError):
+        return default
+
+
+from decimal import Decimal, InvalidOperation
+
 def product_detail(request, product_id):
     # Get the main product
     product = get_object_or_404(Product, pk=product_id)
 
     # Use offer price if available, else regular price
-    base_price = Decimal(str(product.offer)) if product.offer else Decimal(str(product.price))
+    base_price = safe_decimal(product.offer) if product.offer else safe_decimal(product.price)
 
     # Related products (same category, exclude itself)
-    related_products_qs = Product.objects.filter(
-        category=product.category
-    ).exclude(pk=product_id)
+    related_products_qs = Product.objects.filter(category=product.category).exclude(pk=product_id)
 
     # Filter by ±20% price range
-    price_range_min = base_price * Decimal('0.8')
-    price_range_max = base_price * Decimal('1.2')
+    price_range_min = base_price * Decimal("0.8")
+    price_range_max = base_price * Decimal("1.2")
 
     related_products = related_products_qs.filter(
         price__gte=price_range_min,
@@ -565,7 +596,7 @@ def product_detail(request, product_id):
     if product.images.exists():
         image_url = request.build_absolute_uri(product.images.first().image.url)
     else:
-        image_url = request.build_absolute_uri(static('images/default-product.jpg'))
+        image_url = request.build_absolute_uri(static("images/default-product.jpg"))
 
     # Prepare page absolute URL
     page_url = request.build_absolute_uri(request.path)
@@ -582,8 +613,10 @@ def product_detail(request, product_id):
             contact_number = request.POST.get("contact_number", "").strip()
 
             # Clean & convert values
-            cleaned_price = product_offer_raw.replace("₹", "").replace(",", "") or "0"
-            product_offer_val = Decimal(cleaned_price)
+            cleaned_price = (
+                product_offer_raw.replace("₹", "").replace(",", "").strip() or "0"
+            )
+            product_offer_val = safe_decimal(cleaned_price, default=Decimal("0.00"))
             product_quantity_val = int(product_quantity_raw) if product_quantity_raw.isdigit() else 0
 
             # Save enquiry
@@ -600,7 +633,7 @@ def product_detail(request, product_id):
             messages.success(request, "Your enquiry has been submitted successfully!")
             return redirect("product_detail", product_id=product.id)
 
-        except (InvalidOperation, ValueError) as e:
+        except Exception as e:
             messages.error(request, f"Error saving enquiry: {e}")
 
     return render(request, "detail_product.html", {
