@@ -261,7 +261,8 @@ document.getElementById('categorySelect').addEventListener('change', function() 
           
           <div
             class="absolute top-2 right-2 z-20 cursor-pointer bg-white rounded-full w-8 h-8 flex items-center justify-center shadow hover:shadow-md hover:bg-gray-100 transition duration-300 share-btn"
-            data-share-url="{{ request.build_absolute_uri|slice:':-1' }}{% url 'product_detail' product.id %}"
+            data-share-url="{{ request.scheme }}://{{ request.get_host }}{% url 'product_detail' product.id %}"
+
             data-product-id="{{ product.id }}" data-product-name="{{ product.name }}"
             data-product-offer="{{ product.offer|default:product.price }}"
             data-image-url="{{ product.absolute_image_url }}">
@@ -309,7 +310,7 @@ document.getElementById('categorySelect').addEventListener('change', function() 
 
 
     <!-- Modal -->
-    <div id="shareModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
+    <!-- <div id="shareModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
       <div class="bg-white rounded-xl p-6 w-80 relative shadow-lg">
         <button id="closeShare" class="absolute top-2 right-2 text-gray-600 hover:text-black text-xl">&times;</button>
         <h2 class="text-xl font-bold mb-6 text-center text-gray-800">Share this product</h2>
@@ -340,7 +341,48 @@ document.getElementById('categorySelect').addEventListener('change', function() 
           </a>
         </div>
       </div>
+    </div> -->
+
+<!-- Share Modal --> 
+<!-- Share Modal -->
+<div id="shareModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-xl p-6 w-full max-w-sm relative shadow-lg animate-fadeIn">
+
+    <!-- Close Button -->
+    <button id="closeShare" aria-label="Close share modal"
+      class="absolute top-2 right-2 text-gray-600 hover:text-black text-2xl leading-none focus:outline-none">
+      &times;
+    </button>
+
+    <!-- Title -->
+    <h1 class="text-xl font-bold mb-6 text-center text-gray-800">Share this product</h1>
+
+    <!-- Share Buttons -->
+    <div class="flex flex-col gap-4">
+      <!-- WhatsApp -->
+      <a id="whatsappLink" target="_blank" rel="noopener noreferrer"
+        class="flex items-center gap-3 px-4 py-2 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition">
+        <img src="https://img.icons8.com/color/48/000000/whatsapp--v1.png" alt="WhatsApp" class="w-6 h-6" />
+        <span>Share on WhatsApp</span>
+      </a>
+
+      <!-- Facebook -->
+      <a id="facebookLink" target="_blank" rel="noopener noreferrer"
+        class="flex items-center gap-3 px-4 py-2 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition">
+        <img src="https://img.icons8.com/color/48/000000/facebook-new.png" alt="Facebook" class="w-6 h-6" />
+        <span>Share on Facebook</span>
+      </a>
+
+      <!-- Copy URL -->
+      <button id="copyLinkBtn"
+        class="flex items-center gap-3 px-4 py-2 rounded-lg bg-gray-100 text-gray-800 hover:bg-gray-200 transition">
+        <img src="https://img.icons8.com/ios-filled/50/000000/copy.png" alt="Copy" class="w-6 h-6" />
+        <span>Copy Product URL</span>
+      </button>
     </div>
+  </div>
+</div>
+
 
   </div>
 
@@ -461,7 +503,7 @@ document.getElementById('categorySelect').addEventListener('change', function() 
       });
     });
   </script>
-  <script>
+  <!-- <script>
     document.addEventListener("DOMContentLoaded", function () {
       const shareModal = document.getElementById("shareModal");
       const closeBtn = document.getElementById("closeShare");
@@ -515,7 +557,80 @@ document.getElementById('categorySelect').addEventListener('change', function() 
         linkedinLink.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedURL}`;
       }
     });
-  </script>
+  </script> -->
+  
+ <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const shareModal = document.getElementById("shareModal");
+    const closeBtn = document.getElementById("closeShare");
+    const whatsappLink = document.getElementById("whatsappLink");
+    const facebookLink = document.getElementById("facebookLink");
+    const copyLinkBtn = document.getElementById("copyLinkBtn");
+
+    let currentProductURL = "";
+
+    // Handle share button clicks
+    document.querySelectorAll(".share-btn").forEach(btn => {
+        btn.addEventListener("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            // ✅ Correct URL (directly from template, no duplication)
+            currentProductURL = btn.dataset.shareUrl;
+
+            const productID = btn.dataset.productId;
+            const productName = btn.dataset.productName;
+
+            // Price with fallback
+            const rawOffer = btn.dataset.productOffer;
+            const fallbackPrice = btn.dataset.productPrice || "0";
+            const productPrice = rawOffer && rawOffer !== "null" && rawOffer !== "None"
+                ? rawOffer
+                : fallbackPrice;
+
+            // Message text
+            const message = [
+                `Hey, check out this product (#${productID}) in Furnicraft!`,
+                `${productName}`,
+                `Price: ₹${productPrice}`,
+                `${currentProductURL}`
+            ].join("\n");
+
+            updateShareLinks(currentProductURL, message);
+
+            // Show modal
+            shareModal.classList.remove("hidden");
+        });
+    });
+
+    // Close modal
+    closeBtn.addEventListener("click", () => shareModal.classList.add("hidden"));
+    window.addEventListener("click", e => {
+        if (e.target === shareModal) {
+            shareModal.classList.add("hidden");
+        }
+    });
+
+    // Copy URL
+    copyLinkBtn.addEventListener("click", function () {
+        navigator.clipboard.writeText(currentProductURL).then(() => {
+            alert("✅ Product link copied to clipboard!");
+        }).catch(err => {
+            console.error("Failed to copy: ", err);
+        });
+    });
+
+    // Update share links
+    function updateShareLinks(url, message) {
+        const encodedURL = encodeURIComponent(url);
+        const encodedMessage = encodeURIComponent(message).replace(/%0A/g, "%0A");
+
+        whatsappLink.href = `https://wa.me/?text=${encodedMessage}`;
+        facebookLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedURL}`;
+    }
+});
+</script>
+  
   <script src="{% static 'js/script.js' %}"></script>
 </body>
 

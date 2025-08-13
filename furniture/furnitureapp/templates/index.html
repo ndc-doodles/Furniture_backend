@@ -11,7 +11,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
- <meta property="og:title" content="Hey, check out {{ product.name }} on Furnicraft!">
+ <!-- <meta property="og:title" content="Hey, check out {{ product.name }} on Furnicraft!">
     <meta property="og:description" content="Only ₹{{ product.offer }}. Don’t miss this deal!">
     
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
@@ -20,7 +20,17 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Hey, check out {{ product.name }} on Furnicraft!">
     <meta name="twitter:description" content="Only ₹{{ product.offer }}. Don’t miss this deal!">
-    
+     -->
+
+  <meta property="og:title" content="Hey, check out {{ product.name }} on Furnicraft!">
+<meta property="og:description" content="Only ₹{{ product.offer }}. Don’t miss this deal!">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:type" content="product">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hey, check out {{ product.name }} on Furnicraft!">
+<meta name="twitter:description" content="Only ₹{{ product.offer }}. Don’t miss this deal!">
+
  
 
   <title>FurniCraft - Home</title>
@@ -432,60 +442,20 @@
 
 
 
-  {% comment %} 
-  <div id="shareModal"
-    class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
-    <div class="bg-white rounded-xl p-6 w-80 relative shadow-lg">
-      <button onclick="closeShareModal()"
-        class="absolute top-2 right-2 text-gray-600 hover:text-black text-xl">&times;</button>
-      <h1 class="text-xl font-bold mb-6 text-center text-gray-800">Share this product</h1>
-
-      <div class="flex flex-col gap-4">
-
-        <a href="https://api.whatsapp.com/send?text=Check%20this%20product%20out:%20https://example.com/detail_product.html"
-          target="_blank"
-          class="flex items-center gap-3 px-4 py-2 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition">
-          <img src="https://img.icons8.com/color/48/000000/whatsapp--v1.png" alt="WhatsApp" class="w-6 h-6" />
-          <span>Share on WhatsApp</span>
-        </a>
-
-        <a href="https://www.facebook.com/sharer/sharer.php?u=https://example.com/detail_product.html" target="_blank"
-          class="flex items-center gap-3 px-4 py-2 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition">
-          <img src="https://img.icons8.com/color/48/000000/facebook-new.png" alt="Facebook" class="w-6 h-6" />
-          <span>Share on Facebook</span>
-        </a>
-
-        <a href="https://twitter.com/intent/tweet?url=https://example.com/detail_product.html" target="_blank"
-          class="flex items-center gap-3 px-4 py-2 rounded-lg bg-sky-100 text-sky-700 hover:bg-sky-200 transition">
-          <img src="https://img.icons8.com/ios-filled/50/1DA1F2/twitter.png" alt="Twitter/X" class="w-6 h-6" />
-          <span>Share on X</span>
-        </a>
-
-        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://example.com/detail_product.html"
-          target="_blank"
-          class="flex items-center gap-3 px-4 py-2 rounded-lg bg-blue-50 text-blue-800 hover:bg-blue-100 transition">
-          <img src="https://img.icons8.com/color/48/000000/linkedin.png" alt="LinkedIn" class="w-6 h-6" />
-          <span>Share on LinkedIn</span>
-        </a>
-
-      </div>
-    </div>
-  </div> {% endcomment %}
 
  <!-- Share Modal -->
-<div id="shareModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center p-4">
+<!-- <div id="shareModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center p-4">
   <div class="bg-white rounded-xl p-6 w-full max-w-sm relative shadow-lg animate-fadeIn">
     
-    <!-- Close Button -->
+   
     <button id="closeShare" aria-label="Close share modal"
       class="absolute top-2 right-2 text-gray-600 hover:text-black text-2xl leading-none focus:outline-none">
       &times;
     </button>
 
-    <!-- Title -->
+
     <h1 class="text-xl font-bold mb-6 text-center text-gray-800">Share this product</h1>
 
-    <!-- Share Buttons -->
     <div class="flex flex-col gap-4">
       <a id="whatsappLink" target="_blank" rel="noopener noreferrer"
         class="flex items-center gap-3 px-4 py-2 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition">
@@ -512,9 +482,46 @@
       </a>
     </div>
   </div>
+</div> -->
+
+<!-- Share Modal -->
+<div id="shareModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-xl p-6 w-full max-w-sm relative shadow-lg animate-fadeIn">
+
+    <!-- Close Button -->
+    <button id="closeShare" aria-label="Close share modal"
+      class="absolute top-2 right-2 text-gray-600 hover:text-black text-2xl leading-none focus:outline-none">
+      &times;
+    </button>
+
+    <!-- Title -->
+    <h1 class="text-xl font-bold mb-6 text-center text-gray-800">Share this product</h1>
+
+    <!-- Share Buttons -->
+    <div class="flex flex-col gap-4">
+      <!-- WhatsApp -->
+      <a id="whatsappLink" target="_blank" rel="noopener noreferrer"
+        class="flex items-center gap-3 px-4 py-2 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition">
+        <img src="https://img.icons8.com/color/48/000000/whatsapp--v1.png" alt="WhatsApp" class="w-6 h-6" />
+        <span>Share on WhatsApp</span>
+      </a>
+
+      <!-- Facebook -->
+      <a id="facebookLink" target="_blank" rel="noopener noreferrer"
+        class="flex items-center gap-3 px-4 py-2 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition">
+        <img src="https://img.icons8.com/color/48/000000/facebook-new.png" alt="Facebook" class="w-6 h-6" />
+        <span>Share on Facebook</span>
+      </a>
+
+      <!-- Copy URL -->
+      <button id="copyLinkBtn"
+        class="flex items-center gap-3 px-4 py-2 rounded-lg bg-gray-100 text-gray-800 hover:bg-gray-200 transition">
+        <img src="https://img.icons8.com/ios-filled/50/000000/copy.png" alt="Copy" class="w-6 h-6" />
+        <span>Copy Product URL</span>
+      </button>
+    </div>
+  </div>
 </div>
-
-
 
 
 
@@ -863,7 +870,7 @@
 
 </script> -->
 
-
+<!-- 
 <script>
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -929,8 +936,78 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-</script>
+</script> -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const shareModal = document.getElementById("shareModal");
+    const closeBtn = document.getElementById("closeShare");
+    const whatsappLink = document.getElementById("whatsappLink");
+    const facebookLink = document.getElementById("facebookLink");
+    const copyLinkBtn = document.getElementById("copyLinkBtn");
 
+    let currentProductURL = "";
+
+    // Handle share button clicks
+    document.querySelectorAll(".share-btn").forEach(btn => {
+        btn.addEventListener("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            // ✅ Correct URL (directly from template, no duplication)
+            currentProductURL = btn.dataset.shareUrl;
+
+            const productID = btn.dataset.productId;
+            const productName = btn.dataset.productName;
+
+            // Price with fallback
+            const rawOffer = btn.dataset.productOffer;
+            const fallbackPrice = btn.dataset.productPrice || "0";
+            const productPrice = rawOffer && rawOffer !== "null" && rawOffer !== "None"
+                ? rawOffer
+                : fallbackPrice;
+
+            // Message text
+            const message = [
+                `Hey, check out this product (#${productID}) in Furnicraft!`,
+                `${productName}`,
+                `Price: ₹${productPrice}`,
+                `${currentProductURL}`
+            ].join("\n");
+
+            updateShareLinks(currentProductURL, message);
+
+            // Show modal
+            shareModal.classList.remove("hidden");
+        });
+    });
+
+    // Close modal
+    closeBtn.addEventListener("click", () => shareModal.classList.add("hidden"));
+    window.addEventListener("click", e => {
+        if (e.target === shareModal) {
+            shareModal.classList.add("hidden");
+        }
+    });
+
+    // Copy URL
+    copyLinkBtn.addEventListener("click", function () {
+        navigator.clipboard.writeText(currentProductURL).then(() => {
+            alert("✅ Product link copied to clipboard!");
+        }).catch(err => {
+            console.error("Failed to copy: ", err);
+        });
+    });
+
+    // Update share links
+    function updateShareLinks(url, message) {
+        const encodedURL = encodeURIComponent(url);
+        const encodedMessage = encodeURIComponent(message).replace(/%0A/g, "%0A");
+
+        whatsappLink.href = `https://wa.me/?text=${encodedMessage}`;
+        facebookLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedURL}`;
+    }
+});
+</script>
 
 
   <script src="{% static 'js/script.js' %}"></script>
