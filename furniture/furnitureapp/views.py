@@ -267,6 +267,110 @@ import json
 
 
 
+# @never_cache
+# def admin_productlisting(request):
+#     if not request.session.get('user_id'):
+#         return redirect('login')
+
+#     categories = Category.objects.all()
+
+#     if request.method == "POST":
+#         action = request.POST.get("action")
+#         product_id = request.POST.get('product_id')
+
+#         if action in ['edit', 'delete']:
+#             if not product_id or not product_id.isdigit():
+#                 return HttpResponseBadRequest("Invalid or missing product ID.")
+#             product_id = int(product_id)
+
+#         if action == "add":
+#             category_id = request.POST.get('category')
+#             category = get_object_or_404(Category, id=category_id)
+
+#             product = Product.objects.create(
+#                 name=request.POST.get('name', '').strip(),
+#                 subsentence=request.POST.get('subsentence', '').strip(),
+#                 category=category,
+#                 material=request.POST.get('material', '').strip(),
+#                 price=request.POST.get('price', 0),
+#                 offer=request.POST.get('offer', '').strip(),
+#                 discount=request.POST.get('discount', '').strip(),
+#                 dimension=request.POST.get('dimension', '').strip(),
+#                 color=request.POST.get('color', '').strip(),
+#                 weight=request.POST.get('weight', '').strip(),
+#                 seating_capacity=request.POST.get('seating_capacity', '').strip(),
+#                 warranty=request.POST.get('warranty', '').strip(),
+#                 availability=request.POST.get('availability', '').strip(),
+#                 return_policy=request.POST.get('return_policy', '').strip(),
+#                 description=request.POST.get('description', '').strip() or ""
+#             )
+#             for img in request.FILES.getlist('images'):
+#                 ProductImage.objects.create(product=product, image=img)
+
+#         elif action == "edit":
+#             product = get_object_or_404(Product, id=product_id)
+#             category_id = request.POST.get('category')
+#             category = get_object_or_404(Category, id=category_id)
+
+#             product.name = request.POST.get('name', '').strip()
+#             product.subsentence = request.POST.get('subsentence', '').strip()
+#             product.category = category
+#             product.material = request.POST.get('material', '').strip()
+#             product.price = request.POST.get('price', 0)
+#             product.offer = request.POST.get('offer', '').strip()
+#             product.discount = request.POST.get('discount', '').strip()
+#             product.dimension = request.POST.get('dimension', '').strip()
+#             product.color = request.POST.get('color', '').strip()
+#             product.weight = request.POST.get('weight', '').strip()
+#             product.seating_capacity = request.POST.get('seating_capacity', '').strip()
+#             product.warranty = request.POST.get('warranty', '').strip()
+#             product.availability = request.POST.get('availability', '').strip()
+#             product.return_policy = request.POST.get('return_policy', '').strip()
+#             product.description = request.POST.get('description', '').strip() or ""
+#             product.save()
+
+#             if request.FILES.getlist('images'):
+#                 product.images.all().delete()
+#                 for img in request.FILES.getlist('images'):
+#                     ProductImage.objects.create(product=product, image=img)
+
+#         elif action == "delete":
+#             product = get_object_or_404(Product, id=product_id)
+#             product.delete()
+
+#         return redirect('listing')
+
+#     # Prefetch images and prepare JSON for JS
+#     products = Product.objects.select_related('category').prefetch_related('images').all()
+#     products_json = []
+#     for p in products:
+#         products_json.append({
+#             'id': p.id,
+#             'category_id': p.category.id if p.category else None,
+#             'name': p.name,
+#             'subsentence': p.subsentence,
+#             'material': p.material,
+#             'price': str(p.price),
+#             'offer': p.offer,
+#             'discount': p.discount,
+#             'dimension': p.dimension,
+#             'color': p.color,
+#             'weight': p.weight,
+#             'seating_capacity': p.seating_capacity,
+#             'warranty': p.warranty,
+#             'availability': p.availability,
+#             'return_policy': p.return_policy,
+#             'description': p.description,
+#             'images': [img.image.url for img in p.images.all()]
+#         })
+
+#     return render(request, 'admin_productlisting.html', {
+#         'products': products,
+#         'categories': categories,
+#         'products_json': json.dumps(products_json)
+#     })
+
+
 @never_cache
 def admin_productlisting(request):
     if not request.session.get('user_id'):
@@ -283,6 +387,10 @@ def admin_productlisting(request):
                 return HttpResponseBadRequest("Invalid or missing product ID.")
             product_id = int(product_id)
 
+        # Helper: convert empty string to None for numeric fields
+        def parse_float(value):
+            return float(value) if value not in [None, ''] else None
+
         if action == "add":
             category_id = request.POST.get('category')
             category = get_object_or_404(Category, id=category_id)
@@ -292,7 +400,7 @@ def admin_productlisting(request):
                 subsentence=request.POST.get('subsentence', '').strip(),
                 category=category,
                 material=request.POST.get('material', '').strip(),
-                price=request.POST.get('price', 0),
+                price=parse_float(request.POST.get('price')),
                 offer=request.POST.get('offer', '').strip(),
                 discount=request.POST.get('discount', '').strip(),
                 dimension=request.POST.get('dimension', '').strip(),
@@ -316,7 +424,7 @@ def admin_productlisting(request):
             product.subsentence = request.POST.get('subsentence', '').strip()
             product.category = category
             product.material = request.POST.get('material', '').strip()
-            product.price = request.POST.get('price', 0)
+            product.price = parse_float(request.POST.get('price'))
             product.offer = request.POST.get('offer', '').strip()
             product.discount = request.POST.get('discount', '').strip()
             product.dimension = request.POST.get('dimension', '').strip()
@@ -341,7 +449,7 @@ def admin_productlisting(request):
         return redirect('listing')
 
     # Prefetch images and prepare JSON for JS
-    products = Product.objects.select_related('category').prefetch_related('images').all()
+    products = Product.objects.select_related('category').prefetch_related('images').order_by('-id')
     products_json = []
     for p in products:
         products_json.append({
@@ -350,7 +458,7 @@ def admin_productlisting(request):
             'name': p.name,
             'subsentence': p.subsentence,
             'material': p.material,
-            'price': str(p.price),
+            'price': str(p.price) if p.price is not None else "",
             'offer': p.offer,
             'discount': p.discount,
             'dimension': p.dimension,
@@ -503,26 +611,25 @@ def index(request):
 
 
 
-
 def product(request):
-    # Get selected category ID from query params (string initially)
+   
     selected_category = request.GET.get('category')
 
-    # Convert to integer if valid
+   
     try:
         selected_category = int(selected_category) if selected_category else None
     except (ValueError, TypeError):
         selected_category = None
 
-    # All categories for the dropdown
+   
     categories = Category.objects.all()
 
-    # Default: all products
-    products = Product.objects.all()
+   
+    products = Product.objects.all().order_by('-id')
 
-    # If a category is selected, filter products
+   
     if selected_category:
-        products = products.filter(category_id=selected_category)
+        products = products.filter(category_id=selected_category).order_by('-id')
 
     return render(request, 'products.html', {
         'products': products,

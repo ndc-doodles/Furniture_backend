@@ -223,13 +223,26 @@
     <div class="lg:w-1/2 space-y-6">
       <div>
         <h1 class="text-3xl font-bold text-[#2e2e2e] uppercase">{{ product.name }}</h1>
-        <p class="text-lg text-gray-500">Premium Comfort 3-Seater</p>
+        <p class="text-lg text-gray-500">{{product.subsentence}}</p>
       </div>
 
       <div class="flex items-center gap-4">
-        <span class="text-xl line-through text-gray-400">₹{{ product.price }}</span>
+        <!-- <span class="text-xl line-through text-gray-400">₹{{ product.price }}</span>
         <span class="text-3xl font-bold text-[#bc9565]">{{ product.offer }}</span>
-        <span class="text-green-600 font-semibold">{{ product.discount }}  OFF</span>
+        <span class="text-green-600 font-semibold">{{ product.discount }}  OFF</span> -->
+        {% if product.price %}
+    <span class="text-xl line-through text-gray-400">₹{{ product.price }}</span>
+{% endif %}
+
+{% if product.offer %}
+    <span class="text-3xl font-bold text-[#bc9565]">{{ product.offer }}</span>
+{% endif %}
+
+{% if related.discount_percentage %}
+    <span>{{ related.discount_percentage|add:"% off" }}</span>
+{% endif %}
+
+
       </div>
 
       <div>
@@ -271,7 +284,11 @@
         </div>
         <div>
           <p class="font-semibold text-[#2e2e2e]">Availability:</p>
-          <p class="text-green-600 font-semibold">{{ product.get_availability_display }}</p>
+          <!-- <p class="text-green-600 font-semibold">{{ product.get_availability_display }}</p> -->
+           <p class="{% if product.availability == 'in_stock' %}text-green-600{% else %}text-red-600{% endif %} font-semibold">
+    {{ product.get_availability_display }}
+</p>
+
         </div>
         <div>
           <p class="font-semibold text-[#2e2e2e]">Return Policy:</p>
@@ -509,10 +526,17 @@ document.addEventListener("DOMContentLoaded", function() {
           <p class="text-sm text-gray-500">Material: {{ related.material }}</p>
 
           <div class="mt-1 flex items-center gap-2">
-            <span class="text-base font-bold text-[#bc9565]">₹{{ related.price|floatformat:2 }}</span>
+            {% if product.price %}
+    <span class="text-xl line-through text-gray-400">₹{{ product.price }}</span>
+{% endif %}
+
+{% if product.offer %}
+    <span class="text-3xl font-bold text-[#bc9565]">{{ product.offer }}</span>
+{% endif %}
             {% if related.discount_percentage %}
-              <span>{{ related.discount_percentage }}% off</span>
-            {% endif %}
+    <span>{{ related.discount_percentage|add:"% off" }}</span>
+{% endif %}
+
           </div>
 
           <button class="mt-4 w-full bg-[#bc9565] text-white py-2 rounded hover:bg-[#a27848] transition duration-300">

@@ -411,9 +411,16 @@
     <p class="text-sm text-gray-500">{{ product.material }}</p>
 
     <div class="mt-1 flex items-center gap-2">
-      <span class="text-base font-bold text-[#bc9565]">₹ {{ product.offer }}</span>
-      <span class="text-sm text-gray-400 line-through">₹{{ product.price }}</span>
-      <span class="text-sm text-[red] font-medium">{{ product.discount }}</span>
+      {% if product.price %}
+    <span class="text-xl line-through text-gray-400">₹{{ product.price }}</span>
+{% endif %}
+
+{% if product.offer %}
+    <span class="text-3xl font-bold text-[#bc9565]">{{ product.offer }}</span>
+{% endif %}
+                {% if product.discount %}
+    <span class="text-sm text-[red] font-medium">{{ product.discount|add:"% off" }}</span>
+{% endif %}
     </div>
 
     <!-- Detail button -->
@@ -571,7 +578,7 @@
         </div>
 
 
-        <a href="about.html"
+        <a href="{% url 'about'%}"
           class="inline-block bg-[#bc9565]  text-white font-semibold px-6 py-3 rounded-lg transition-all">
           Read More
         </a>
@@ -733,7 +740,7 @@
     <p class="text-md mb-6 max-w-2xl mx-auto">
       Experience our craftsmanship up close. Try, explore and get inspired.
     </p>
-    <a href="contact.html"
+    <a href="{% url 'contact' %}"
       class="inline-block bg-white text-[#4b3f2f] hover:bg-[#e0d4c1] font-semibold py-3 px-6 rounded-lg transition-all duration-300">
       Contact Us
     </a>

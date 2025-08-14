@@ -287,9 +287,17 @@ document.getElementById('categorySelect').addEventListener('change', function() 
           <p class="text-sm text-gray-500">{{ product.material }}</p>
 
           <div class="mt-1 flex items-center gap-2">
-            <span class="text-base font-bold text-[#bc9565]">{{ product.offer }}</span>
-            <span class="text-sm text-gray-400 line-through">₹{{ product.price }}</span>
-            <span class="text-sm text-[red] font-medium">{{ product.discount }}% off</span>
+            {% if product.price %}
+    <span class="text-xl line-through text-gray-400">₹{{ product.price }}</span>
+{% endif %}
+
+{% if product.offer %}
+    <span class="text-3xl font-bold text-[#bc9565]">{{ product.offer }}</span>
+{% endif %}
+           {% if product.discount %}
+    <span class="text-sm text-[red] font-medium">{{ product.discount|add:"% off" }}</span>
+{% endif %}
+
           </div>
 
           <button onclick="window.location.href='{% url 'product_detail' product.id %}'"
