@@ -184,7 +184,15 @@
       </div>
     </div>
 
-
+<script>
+document.getElementById('productForm').addEventListener('submit', function (e) {
+    let imageInput = document.getElementById('imageInput');
+    if (imageInput.files.length > 6) {
+        e.preventDefault(); // Stop form submission
+        alert("You can upload a maximum of 6 images.");
+    }
+});
+</script>
 
 
 <!-- EDIT PRODUCT MODAL -->
@@ -236,9 +244,73 @@
     </form>
   </div>
 </div>
-
-
 <script>
+let existingImageCount = 0;
+
+function editRow(button) {
+  const row = button.closest("tr");
+
+  document.getElementById('editProductId').value = row.dataset.productId;
+  document.getElementById("editName").value = row.dataset.name || "";
+  document.getElementById("editSubsentence").value = row.dataset.subsentence || "";
+  document.getElementById("editMaterial").value = row.dataset.material || "";
+  document.getElementById("editPrice").value = row.dataset.price || "";
+  document.getElementById("editOffer").value = row.dataset.offer || "";
+  document.getElementById("editDiscount").value = row.dataset.discount || "";
+  document.getElementById("editDimension").value = row.dataset.dimension || "";
+  document.getElementById("editColor").value = row.dataset.color || "";
+  document.getElementById("editWeight").value = row.dataset.weight || "";
+  document.getElementById("editSeating").value = row.dataset.seating || "";
+  document.getElementById("editWarranty").value = row.dataset.warranty || "";
+  document.getElementById("editAvailability").value = row.dataset.availability || "";
+  document.getElementById("editReturnPolicy").value = row.dataset.returnPolicy || "";
+  document.getElementById("editDescription").value = row.dataset.description || "";
+  document.getElementById("editCategory").value = row.dataset.categoryId || "";
+
+  // Preview Images
+  const previewContainer = document.getElementById("editPreviewContainer");
+  previewContainer.innerHTML = "";
+  try {
+    const images = JSON.parse(row.dataset.images || "[]");
+    existingImageCount = images.length; // store existing image count
+
+    if (images.length > 0) {
+      images.forEach(url => {
+        const img = document.createElement("img");
+        img.src = url;
+        img.classList.add("h-20", "w-20", "object-cover", "rounded");
+        previewContainer.appendChild(img);
+      });
+    }
+  } catch (err) {
+    console.error("Image parsing failed", err);
+    existingImageCount = 0;
+  }
+
+  // Show modal
+  const modal = document.getElementById("editModal");
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+}
+
+function closeEditModal() {
+  const modal = document.getElementById("editModal");
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+}
+
+// Prevent more than 6 total images
+document.getElementById('editProductForm').addEventListener('submit', function (e) {
+  const newImageCount = document.getElementById('editImageInput').files.length;
+  if (existingImageCount + newImageCount > 6) {
+    e.preventDefault();
+    alert(`You already have ${existingImageCount} image(s). You can upload only ${6 - existingImageCount} more.`);
+  }
+});
+</script>
+
+
+<!-- <script>
 function editRow(button) {
   const row = button.closest("tr");
 
@@ -287,7 +359,7 @@ function closeEditModal() {
   modal.classList.add("hidden");
   modal.classList.remove("flex");
 }
-</script>
+</script> -->
 
 
 

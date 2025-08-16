@@ -24,7 +24,7 @@
 
   <meta property="og:title" content="Hey, check out {{ product.name }} on Furnicraft!">
 <meta property="og:description" content="Only ₹{{ product.offer }}. Don’t miss this deal!">
-<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:url" content="{{ request.sparescorporation.com }}">
 <meta property="og:type" content="product">
 
 <meta name="twitter:card" content="summary_large_image">
@@ -75,6 +75,7 @@
       <h1 class="mt-2 text-lg md:text-xl md:mt-0 uppercase font-bold text-[#bc9565]">Spares Corporation</h1>
       <!-- <img src="./static/images/logo.png" alt="FurniCraft Logo" class="h-10 md:h-12" /> -->
     </a>
+  
 
         <ul id="navLinks"
           class="hidden md:flex items-center space-x-8 py-6 text-white text-[14px] font-semibold uppercase transition-all">
@@ -265,92 +266,6 @@
 
 
 
-  {% comment %} <section class="py-16 mt-10">
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="text-center mb-12">
-        <h1 class="text-2xl md:text-4xl font-bold text-gray-800 mb-2 uppercase">Our Products</h1>
-        <p class="text-gray-500 text-md">Discover furniture that combines elegance, quality and comfort for every
-          space.</p>
-      </div>
-
-      <div class="relative">
-        <button id="scrollLeft" class="absolute left-2 top-1/2 transform -translate-y-1/2 z-10   p-2  md:hidden">
-          &#10094;
-        </button>
-
-        <button id="scrollRight" class="absolute right-2 top-1/2 transform -translate-y-1/2 z-10   p-2  md:hidden">
-          &#10095;
-        </button>
-
-
-
-        <div id="cardContainer"
-          class="hide-scrollbar flex md:grid md:grid-cols-2 lg:grid-cols-4 overflow-x-auto md:overflow-visible gap-6 scroll-smooth snap-x snap-mandatory px-1 md:px-0">
-          {% for product in products %}
-          <a href="{% url 'product_detail' product.id %}" class="min-w-full md:min-w-0 snap-start group relative">
-
-            <div class="bg-white rounded-xl shadow p-4 hover:shadow-lg transition duration-300 w-full">
-
-              <div
-                class="absolute top-2 right-2 z-20 cursor-pointer bg-white rounded-full w-8 h-8 flex items-center justify-center shadow hover:shadow-md hover:bg-gray-100 transition duration-300"
-                onclick="openShareModal(event)">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="#3f3f3f">
-                  <path
-                    d="M17 22q-1.25 0-2.125-.875T14 19q0-.15.075-.7L7.05 14.2q-.4.375-.925.588T5 15q-1.25 0-2.125-.875T2 12t.875-2.125T5 9q.6 0 1.125.213t.925.587l7.025-4.1q-.05-.175-.062-.337T14 5q0-1.25.875-2.125T17 2t2.125.875T20 5t-.875 2.125T17 8q-.6 0-1.125-.213T14.95 7.2l-7.025 4.1q.05.175.063.338T8 12t-.012.363t-.063.337l7.025 4.1q.4-.375.925-.587T17 16q1.25 0 2.125.875T20 19t-.875 2.125T17 22m0-2q.425 0 .713-.287T18 19t-.288-.712T17 18t-.712.288T16 19t.288.713T17 20M5 13q.425 0 .713-.288T6 12t-.288-.712T5 11t-.712.288T4 12t.288.713T5 13m12-7q.425 0 .713-.288T18 5t-.288-.712T17 4t-.712.288T16 5t.288.713T17 6m0-1" />
-                </svg>
-              </div>
-
-              {% with product.images.all as images %}
-              {% if images %}
-              <img src="{{ images.0.image.url }}"
-                data-hover="{% if images|length > 1 %}{{ images.1.image.url }}{% else %}{{ images.0.image.url }}{% endif %}"
-                alt="{{ product.name }}" class="product-image w-full h-64 object-cover rounded-md mb-4" />
-              {% else %}
-              <img src="/static/images/default-product.jpg" alt="No Image Available"
-                class="product-image w-full h-64 object-cover rounded-md mb-4" />
-              {% endif %}
-              {% endwith %}
-
-              <h3 class="text-lg font-semibold">{{ product.name }}</h3>
-              <p class="text-sm text-gray-500">{{ product.material }}</p>
-
-              <div class="mt-1 flex items-center gap-2">
-                <span class="text-base font-bold text-[#bc9565]">₹{{ product.price }}</span>
-                <span class="text-sm text-gray-400 line-through">₹18,999</span>
-                <span class="text-sm text-[red] font-medium">21% off</span>
-              </div>
-
-              <button onclick="window.location.href='{% url 'product_detail' product.id %}'"
-                class="mt-4 w-full bg-[#bc9565] text-white py-2 rounded hover:bg-[#a27848] transition duration-300">
-                Detail View
-              </button>
-            </div>
-          </a>
-
-
-          {% endfor %}
-
-
-
-
-        </div>
-
-
-      </div>
-
-    </div>
-
-    <div class="text-center mt-10">
-      <a href="{% url 'product' %}">
-        <button
-          class="border border-[#bc9565] text-[#bc9565] px-6 py-2 rounded-md font-semibold hover:bg-[#bc9565] hover:text-white transition duration-300">
-          Explore More
-        </button>
-      </a>
-    </div>
-
-  </section> {% endcomment %}
-
  <section class="py-16 mt-10">
   <div class="max-w-7xl mx-auto px-4">
     <div class="text-center mb-12">
@@ -383,16 +298,17 @@
     <div class="relative">
       <!-- Share button -->
       <div
-        class="absolute top-2 right-2 z-20 cursor-pointer bg-white rounded-full w-8 h-8 flex items-center justify-center shadow hover:shadow-md hover:bg-gray-100 transition duration-300 share-btn"
-        data-share-url="{{ request.build_absolute_uri|slice:':-1' }}{% url 'product_detail' product.id %}"
-        data-product-id="{{ product.id }}"
-        data-product-name="{{ product.name }}"
-        data-product-offer="{{ product.offer|default:product.price }}"
-        data-image-url="{{ product.absolute_image_url }}">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="#3f3f3f">
-          <path d="M17 22q-1.25 0-2.125-.875T14 19q0-.15.075-.7L7.05 14.2q-.4.375-.925.588T5 15q-1.25 0-2.125-.875T2 12t.875-2.125T5 9q.6 0 1.125.213t.925.587l7.025-4.1q-.05-.175-.062-.337T14 5q0-1.25.875-2.125T17 2t2.125.875T20 5t-.875 2.125T17 8q-.6 0-1.125-.213T14.95 7.2l-7.025 4.1q.05.175.063.338T8 12t-.012.363t-.063.337l7.025 4.1q.4-.375.925-.587T17 16q1.25 0 2.125.875T20 19t-.875 2.125T17 22m0-2q.425 0 .713-.287T18 19t-.288-.712T17 18t-.712.288T16 19t.288.713T17 20M5 13q.425 0 .713-.288T6 12t-.288-.712T5 11t-.712.288T4 12t.288.713T5 13m12-7q.425 0 .713-.288T18 5t-.288-.712T17 4t-.712.288T16 5t.288.713T17 6m0-1" />
-        </svg>
-      </div>
+    class="absolute top-2 right-2 z-20 cursor-pointer bg-white rounded-full w-8 h-8 flex items-center justify-center shadow hover:shadow-md hover:bg-gray-100 transition duration-300 share-btn"
+    data-share-url="https://sparescorporation.com{% url 'product_detail' product.id %}"
+    data-product-id="{{ product.id }}"
+    data-product-name="{{ product.name }}"
+    data-product-offer="{{ product.offer|default:product.price }}"
+    data-image-url="{{ product.absolute_image_url }}">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="#3f3f3f">
+        <path d="M17 22q-1.25 0-2.125-.875T14 19q0-.15.075-.7L7.05 14.2q-.4.375-.925.588T5 15q-1.25 0-2.125-.875T2 12t.875-2.125T5 9q.6 0 1.125.213t.925.587l7.025-4.1q-.05-.175-.062-.337T14 5q0-1.25.875-2.125T17 2t2.125.875T20 5t-.875 2.125T17 8q-.6 0-1.125-.213T14.95 7.2l-7.025 4.1q.05.175.063.338T8 12t-.012.363t-.063.337l7.025 4.1q.4-.375.925-.587T17 16q1.25 0 2.125.875T20 19t-.875 2.125T17 22m0-2q.425 0 .713-.287T18 19t-.288-.712T17 18t-.712.288T16 19t.288.713T17 20M5 13q.425 0 .713-.288T6 12t-.288-.712T5 11t-.712.288T4 12t.288.713T5 13m12-7q.425 0 .713-.288T18 5t-.288-.712T17 4t-.712.288T16 5t.288.713T17 6m0-1" />
+    </svg>
+</div>
+
 
       <!-- Product image -->
       {% with product.images.all as images %}
@@ -450,47 +366,6 @@
 
 
 
-
- <!-- Share Modal -->
-<!-- <div id="shareModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center p-4">
-  <div class="bg-white rounded-xl p-6 w-full max-w-sm relative shadow-lg animate-fadeIn">
-    
-   
-    <button id="closeShare" aria-label="Close share modal"
-      class="absolute top-2 right-2 text-gray-600 hover:text-black text-2xl leading-none focus:outline-none">
-      &times;
-    </button>
-
-
-    <h1 class="text-xl font-bold mb-6 text-center text-gray-800">Share this product</h1>
-
-    <div class="flex flex-col gap-4">
-      <a id="whatsappLink" target="_blank" rel="noopener noreferrer"
-        class="flex items-center gap-3 px-4 py-2 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition">
-        <img src="https://img.icons8.com/color/48/000000/whatsapp--v1.png" alt="WhatsApp" class="w-6 h-6" />
-        <span>Share on WhatsApp</span>
-      </a>
-
-      <a id="facebookLink" target="_blank" rel="noopener noreferrer"
-        class="flex items-center gap-3 px-4 py-2 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition">
-        <img src="https://img.icons8.com/color/48/000000/facebook-new.png" alt="Facebook" class="w-6 h-6" />
-        <span>Share on Facebook</span>
-      </a>
-
-      <a id="twitterLink" target="_blank" rel="noopener noreferrer"
-        class="flex items-center gap-3 px-4 py-2 rounded-lg bg-sky-100 text-sky-700 hover:bg-sky-200 transition">
-        <img src="https://img.icons8.com/ios-filled/50/1DA1F2/twitter.png" alt="Twitter" class="w-6 h-6" />
-        <span>Share on X</span>
-      </a>
-
-      <a id="linkedinLink" target="_blank" rel="noopener noreferrer"
-        class="flex items-center gap-3 px-4 py-2 rounded-lg bg-blue-50 text-blue-800 hover:bg-blue-100 transition">
-        <img src="https://img.icons8.com/color/48/000000/linkedin.png" alt="LinkedIn" class="w-6 h-6" />
-        <span>Share on LinkedIn</span>
-      </a>
-    </div>
-  </div>
-</div> -->
 
 <!-- Share Modal -->
 <div id="shareModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center p-4">
@@ -753,8 +628,14 @@
 
 <footer class="bg-black text-white px-6 md:px-20 py-20">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
-      <div>
-        <img src="/static/images/logo11.png" alt="Logo" class="w-44 mb-4">
+   
+        
+
+        <div>
+       <a href="{% url 'index' %}" id="brand" class="transition-all block">
+      <h1 class=" text-lg md:text-xl md:mt-0 uppercase font-bold text-white mb-4">Spares Corporation</h1>
+      <!-- <img src="./static/images/logo.png" alt="FurniCraft Logo" class="h-10 md:h-12" /> -->
+    </a>
         <p class="text-md text-gray-300">
           We offer end-to-end furniture manufacturing, repair and polishing services to bring your spaces to life.
         </p>
@@ -810,141 +691,7 @@
       once: true,
     });
   </script>
-<!-- <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const shareModal = document.getElementById("shareModal");
-    const closeBtn = document.getElementById("closeShare");
 
-    const whatsappLink = document.getElementById("whatsappLink");
-    const facebookLink = document.getElementById("facebookLink");
-    const twitterLink = document.getElementById("twitterLink");
-    const linkedinLink = document.getElementById("linkedinLink");
-
-    // Open Share Modal
-    document.querySelectorAll(".share-btn").forEach(btn => {
-        btn.addEventListener("click", function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-
-            const productURL = btn.getAttribute("data-share-url");
-            const productID = btn.getAttribute("data-product-id");
-            const productName = btn.getAttribute("data-product-name");
-            const productPrice = btn.getAttribute("data-product-offer");
-            const productImage = btn.getAttribute("data-image-url");
-
-            // Message for sharing
-            const message = `Hey, check out this product (#${productID}) in Furnicraft!\n` +
-                            ` ${productName}\n Price: ₹${productPrice}\n` +
-                            `${productURL}`;
-
-            // Update share links
-            updateShareLinks(productURL, message, productImage);
-
-            // Show modal
-            shareModal.classList.remove("hidden");
-        });
-    });
-
-    // Close modal on X button
-    closeBtn.addEventListener("click", function () {
-        shareModal.classList.add("hidden");
-    });
-
-    // Close modal when clicking outside content
-    window.addEventListener("click", function (e) {
-        if (e.target === shareModal) {
-            shareModal.classList.add("hidden");
-        }
-    });
-
-    // Function to update all social share links
-    function updateShareLinks(url, message, image) {
-        const encodedURL = encodeURIComponent(url);
-        const encodedMessage = encodeURIComponent(message);
-
-        // WhatsApp
-        whatsappLink.href = `https://wa.me/?text=${encodedMessage}`;
-
-        // Facebook
-        facebookLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedURL}`;
-
-        // Twitter (X)
-        twitterLink.href = `https://twitter.com/intent/tweet?text=${encodedMessage}&url=${encodedURL}`;
-
-        // LinkedIn
-        linkedinLink.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedURL}`;
-    }
-});
-
-</script> -->
-
-<!-- 
-<script>
-
-document.addEventListener("DOMContentLoaded", function () {
-    const shareModal = document.getElementById("shareModal");
-    const closeBtn = document.getElementById("closeShare");
-
-    const whatsappLink = document.getElementById("whatsappLink");
-    const facebookLink = document.getElementById("facebookLink");
-    const twitterLink = document.getElementById("twitterLink");
-    const linkedinLink = document.getElementById("linkedinLink");
-
-    // Handle share button clicks
-    document.querySelectorAll(".share-btn").forEach(btn => {
-        btn.addEventListener("click", function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-
-            const productURL = btn.dataset.shareUrl;
-            const productID = btn.dataset.productId;
-            const productName = btn.dataset.productName;
-
-            // Price with fallback
-            const rawOffer = btn.dataset.productOffer;
-            const fallbackPrice = btn.dataset.productPrice || "0";
-            const productPrice = rawOffer && rawOffer !== "null" && rawOffer !== "None"
-                ? rawOffer
-                : fallbackPrice;
-
-            // Message text
-            const message = [
-                `Hey, check out this product (#${productID}) in Furnicraft!`,
-                `${productName}`,
-                `Price: ₹${productPrice}`,
-                `${productURL}`
-            ].join("\n");
-
-            updateShareLinks(productURL, message);
-
-            // Show modal
-            shareModal.classList.remove("hidden");
-        });
-    });
-
-    // Close modal on button click
-    closeBtn.addEventListener("click", () => shareModal.classList.add("hidden"));
-
-    // Close modal when clicking outside content
-    window.addEventListener("click", e => {
-        if (e.target === shareModal) {
-            shareModal.classList.add("hidden");
-        }
-    });
-
-    // Update all social links
-    function updateShareLinks(url, message) {
-        const encodedURL = encodeURIComponent(url);
-        const encodedMessage = encodeURIComponent(message).replace(/%0A/g, "%0A"); // preserve line breaks
-
-        whatsappLink.href = `https://wa.me/?text=${encodedMessage}`;
-        facebookLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedURL}`;
-        twitterLink.href = `https://twitter.com/intent/tweet?text=${encodedMessage}`;
-        linkedinLink.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedURL}`;
-    }
-});
-
-</script> -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const shareModal = document.getElementById("shareModal");

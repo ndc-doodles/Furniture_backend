@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+#ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', 'sparescorporation.com']
 
 # Application definition
 
@@ -73,6 +74,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'furniture.wsgi.application'
+
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://sparescorporation.com/",
+    "https://www.sparescorporation.com/"
+]
 
 
 # Database
@@ -136,6 +143,7 @@ cloudinary.config(
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
+# STATIC_ROOT = BASE_DIR / "static"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 

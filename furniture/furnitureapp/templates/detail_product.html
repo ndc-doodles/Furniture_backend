@@ -9,7 +9,7 @@
   <meta property="og:title" content="Hey, check out {{ relatedname }} on Furnicraft!">
     <meta property="og:description" content="Only ₹{{ related.offer }}. Don’t miss this deal!">
     
-    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:url" content="{{ request.sparescorporation.com }}">
     <meta property="og:type" content="product">
 
     <meta name="twitter:card" content="summary_large_image">
@@ -554,17 +554,18 @@ document.addEventListener("DOMContentLoaded", function() {
         <div class="bg-white rounded-xl shadow p-4 hover:shadow-lg transition duration-300 w-full relative">
 
           <!-- Share button -->
-          <div
-            class="absolute top-2 right-2 z-20 cursor-pointer bg-white rounded-full w-8 h-8 flex items-center justify-center shadow hover:shadow-md hover:bg-gray-100 transition duration-300 share-btn"
-            data-share-url="{{ request.scheme }}://{{ request.get_host }}{% url 'product_detail' related.id %}"
-            data-product-id="{{ related.id }}"
-            data-product-name="{{ related.name }}"
-            data-product-offer="{{ related.offer|default:related.price }}"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="#3f3f3f">
-              <path d="M17 22q-1.25 0-2.125-.875T14 19q0-.15.075-.7L7.05 14.2q-.4.375-.925.588T5 15q-1.25 0-2.125-.875T2 12t.875-2.125T5 9q.6 0 1.125.213t.925.587l7.025-4.1q-.05-.175-.062-.337T14 5q0-1.25.875-2.125T17 2t2.125.875T20 5t-.875 2.125T17 8q-.6 0-1.125-.213T14.95 7.2l-7.025 4.1q.05.175.063.338T8 12t-.012.363t-.063.337l7.025 4.1q.4-.375.925-.587T17 16q1.25 0 2.125.875T20 19t-.875 2.125T17 22m0-2q.425 0 .713-.287T18 19t-.288-.712T17 18t-.712.288T16 19t.288.713T17 20M5 13q.425 0 .713-.288T6 12t-.288-.712T5 11t-.712.288T4 12t.288.713T5 13m12-7q.425 0 .713-.288T18 5t-.288-.712T17 4t-.712.288T16 5t.288.713T17 6m0-1"/>
-            </svg>
-          </div>
+<div
+    class="absolute top-2 right-2 z-20 cursor-pointer bg-white rounded-full w-8 h-8 flex items-center justify-center shadow hover:shadow-md hover:bg-gray-100 transition duration-300 share-btn"
+    data-share-url="https://sparescorporation.com{% url 'product_detail' related.id %}"
+    data-product-id="{{ related.id }}"
+    data-product-name="{{ related.name }}"
+    data-product-offer="{{ related.offer|default:related.price }}"
+>
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="#3f3f3f">
+        <path d="M17 22q-1.25 0-2.125-.875T14 19q0-.15.075-.7L7.05 14.2q-.4.375-.925.588T5 15q-1.25 0-2.125-.875T2 12t.875-2.125T5 9q.6 0 1.125.213t.925.587l7.025-4.1q-.05-.175-.062-.337T14 5q0-1.25.875-2.125T17 2t2.125.875T20 5t-.875 2.125T17 8q-.6 0-1.125-.213T14.95 7.2l-7.025 4.1q.05.175.063.338T8 12t-.012.363t-.063.337l7.025 4.1q.4-.375.925-.587T17 16q1.25 0 2.125.875T20 19t-.875 2.125T17 22m0-2q.425 0 .713-.287T18 19t-.288-.712T17 18t-.712.288T16 19t.288.713T17 20M5 13q.425 0 .713-.288T6 12t-.288-.712T5 11t-.712.288T4 12t.288.713T5 13m12-7q.425 0 .713-.288T18 5t-.288-.712T17 4t-.712.288T16 5t.288.713T17 6m0-1"/>
+    </svg>
+</div>
+
 
           <!-- Product images -->
           <div class="relative w-full h-64 overflow-hidden rounded-md mb-4 group">
@@ -658,7 +659,10 @@ document.addEventListener("DOMContentLoaded", function() {
   <footer class="bg-black text-white px-6 md:px-24 py-20 mt-10">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
       <div>
-        <img src="/static/images/logo11.png" alt="Logo" class="w-44 mb-4">
+       <a href="{% url 'index' %}" id="brand" class="transition-all block">
+      <h1 class=" text-lg md:text-xl md:mt-0 uppercase font-bold text-white mb-4">Spares Corporation</h1>
+      <!-- <img src="./static/images/logo.png" alt="FurniCraft Logo" class="h-10 md:h-12" /> -->
+    </a>
         <p class="text-md text-gray-300">
           We offer end-to-end furniture manufacturing, repair and polishing services to bring your spaces to life.
         </p>
