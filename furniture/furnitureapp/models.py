@@ -25,7 +25,7 @@ class Product(models.Model):
     ]
 
     name = models.CharField(max_length=100)
-    subsentence = models.CharField(max_length=100)
+    subsentence = models.CharField(max_length=100, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     material = models.CharField(max_length=50)
     price = models.FloatField(blank=True, null=True)

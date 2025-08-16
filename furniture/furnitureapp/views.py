@@ -103,7 +103,7 @@ def dashboard(request):
             enquiry.delete()
             return redirect('admin_enquiry')  # or 'dashboard' if you want to stay here
 
-    enquiry = Enquiry.objects.all()
+    enquiry = Enquiry.objects.all().order_by('-id')
     enquiry_count = Enquiry.objects.count()
     product_count = Product.objects.count()
 
@@ -510,7 +510,9 @@ def admin_enquiry(request):
             enquiry.delete()
             return redirect('admin_enquiry')  # Replace with your URL name
 
-    enquiry = Enquiry.objects.all()
+    
+    enquiry = Enquiry.objects.all().order_by('-id')
+
     return render(request, 'admin_enquiry.html', {'enquiry': enquiry})
 
 
@@ -674,17 +676,89 @@ def safe_decimal(value, default=Decimal("0.00")):
 
 from decimal import Decimal, InvalidOperation
 
+# def product_detail(request, product_id):
+#     # Get the main product
+#     product = get_object_or_404(Product, pk=product_id)
+
+#     # Use offer price if available, else regular price
+#     base_price = safe_decimal(product.offer) if product.offer else safe_decimal(product.price)
+
+#     # Related products (same category, exclude itself)
+#     related_products_qs = Product.objects.filter(category=product.category).exclude(pk=product_id)
+
+#     # Filter by ±20% price range
+#     price_range_min = base_price * Decimal("0.8")
+#     price_range_max = base_price * Decimal("1.2")
+
+#     related_products = related_products_qs.filter(
+#         price__gte=price_range_min,
+#         price__lte=price_range_max
+#     )[:6]
+
+#     # Fallbacks if not enough related products
+#     if not related_products.exists():
+#         related_products = related_products_qs[:6]
+#     if not related_products.exists():
+#         related_products = Product.objects.exclude(pk=product_id)[:6]
+
+#     # Prepare image absolute URL for meta tags
+#     if product.images.exists():
+#         image_url = request.build_absolute_uri(product.images.first().image.url)
+#     else:
+#         image_url = request.build_absolute_uri(static("images/default-product.jpg"))
+
+#     # Prepare page absolute URL
+#     page_url = request.build_absolute_uri(request.path)
+
+#     # Handle POST (Enquiry Form)
+#     if request.method == "POST":
+#         try:
+#             product_name = request.POST.get("product_name", "").strip()
+#             product_material = request.POST.get("product_material", "").strip()
+#             product_offer_raw = request.POST.get("product_offer", "").strip()
+#             product_color = request.POST.get("product_color", "").strip()
+#             product_quantity_raw = request.POST.get("product_quantity", "").strip()
+#             customer_name = request.POST.get("customer_name", "").strip()
+#             contact_number = request.POST.get("contact_number", "").strip()
+
+#             # Clean & convert values
+#             cleaned_price = (
+#                 product_offer_raw.replace("₹", "").replace(",", "").strip() or "0"
+#             )
+#             product_offer_val = safe_decimal(cleaned_price, default=Decimal("0.00"))
+#             product_quantity_val = int(product_quantity_raw) if product_quantity_raw.isdigit() else 0
+
+#             # Save enquiry
+#             Enquiry.objects.create(
+#                 product_name=product_name,
+#                 product_material=product_material,
+#                 product_offer=product_offer_val,
+#                 product_color=product_color,
+#                 product_quantity=product_quantity_val,
+#                 customer_name=customer_name,
+#                 contact_number=contact_number
+#             )
+
+#             messages.success(request, "Your enquiry has been submitted successfully!")
+#             return redirect("product_detail", product_id=product.id)
+
+#         except Exception as e:
+#             messages.error(request, f"Error saving enquiry: {e}")
+
+#     return render(request, "detail_product.html", {
+#         "product": product,
+#         "related_products": related_products,
+#         "image_url": image_url,
+#         "page_url": page_url
+#     })
+
 def product_detail(request, product_id):
-    # Get the main product
     product = get_object_or_404(Product, pk=product_id)
 
-    # Use offer price if available, else regular price
     base_price = safe_decimal(product.offer) if product.offer else safe_decimal(product.price)
 
-    # Related products (same category, exclude itself)
     related_products_qs = Product.objects.filter(category=product.category).exclude(pk=product_id)
 
-    # Filter by ±20% price range
     price_range_min = base_price * Decimal("0.8")
     price_range_max = base_price * Decimal("1.2")
 
@@ -693,22 +767,18 @@ def product_detail(request, product_id):
         price__lte=price_range_max
     )[:6]
 
-    # Fallbacks if not enough related products
     if not related_products.exists():
         related_products = related_products_qs[:6]
     if not related_products.exists():
         related_products = Product.objects.exclude(pk=product_id)[:6]
 
-    # Prepare image absolute URL for meta tags
     if product.images.exists():
         image_url = request.build_absolute_uri(product.images.first().image.url)
     else:
         image_url = request.build_absolute_uri(static("images/default-product.jpg"))
 
-    # Prepare page absolute URL
     page_url = request.build_absolute_uri(request.path)
 
-    # Handle POST (Enquiry Form)
     if request.method == "POST":
         try:
             product_name = request.POST.get("product_name", "").strip()
@@ -719,23 +789,36 @@ def product_detail(request, product_id):
             customer_name = request.POST.get("customer_name", "").strip()
             contact_number = request.POST.get("contact_number", "").strip()
 
-            # Clean & convert values
             cleaned_price = (
                 product_offer_raw.replace("₹", "").replace(",", "").strip() or "0"
             )
             product_offer_val = safe_decimal(cleaned_price, default=Decimal("0.00"))
-            product_quantity_val = int(product_quantity_raw) if product_quantity_raw.isdigit() else 0
 
-            # Save enquiry
+            # Validate quantity
+            if not product_quantity_raw.isdigit():
+                messages.error(request, "Invalid quantity entered.")
+                return redirect("product_detail", product_id=product.id)
+
+            product_quantity_val = int(product_quantity_raw)
+
+            if product_quantity_val < 1:
+                messages.error(request, "Quantity must be at least 1.")
+                return redirect("product_detail", product_id=product.id)
+
+            if product_quantity_val > 999:
+                messages.error(request, "Quantity cannot be more than 999.")
+                return redirect("product_detail", product_id=product.id)
+
+        # Save enquiry
             Enquiry.objects.create(
-                product_name=product_name,
-                product_material=product_material,
-                product_offer=product_offer_val,
-                product_color=product_color,
-                product_quantity=product_quantity_val,
-                customer_name=customer_name,
-                contact_number=contact_number
-            )
+            product_name=product_name,
+            product_material=product_material,
+            product_offer=product_offer_val,
+            product_color=product_color,
+            product_quantity=product_quantity_val,
+            customer_name=customer_name,
+            contact_number=contact_number
+        )
 
             messages.success(request, "Your enquiry has been submitted successfully!")
             return redirect("product_detail", product_id=product.id)
@@ -743,14 +826,13 @@ def product_detail(request, product_id):
         except Exception as e:
             messages.error(request, f"Error saving enquiry: {e}")
 
+
     return render(request, "detail_product.html", {
         "product": product,
         "related_products": related_products,
         "image_url": image_url,
         "page_url": page_url
     })
-
-
 
 def about(request):
     return render(request, 'about.html')

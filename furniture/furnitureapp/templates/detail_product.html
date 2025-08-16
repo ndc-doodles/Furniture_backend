@@ -20,7 +20,7 @@
 
    
 
-  <title>FurniCraft - Home</title>
+  <title>Spares Corporation</title>
 
    <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{% static 'css/style.css' %}" />
@@ -58,10 +58,10 @@
     <nav id="navbar" class="fixed top-0 left-0 w-full z-50 px-6 py-4 md:px-24 transition-all duration-300">
       <div class="flex justify-between items-center w-full">
 
-        <a href="{% url 'index' %}" id="brand" class="transition-all block">
-          <img src="./static/images/logo.png" alt="FurniCraft Logo" class="h-10 md:h-12" />
-        </a>
-
+         <a href="{% url 'index' %}" id="brand" class="transition-all block">
+      <h1 class="mt-2 text-lg md:text-xl md:mt-0 uppercase font-bold text-[#bc9565]">Spares Corporation</h1>
+      <!-- <img src="./static/images/logo.png" alt="FurniCraft Logo" class="h-10 md:h-12" /> -->
+    </a>
         <ul id="navLinks"
           class="hidden md:flex items-center space-x-8 py-6 text-white text-[14px] font-semibold uppercase transition-all">
            <li><a href="{% url 'index' %}" class="hover:text-[#bc9565]">Home</a></li>
@@ -180,7 +180,7 @@
         OUR PRODUCTS
       </h1>
       <p class="text-lg md:text-xl max-w-xl mt-2">
-  <a href="index.html" class=" hover:underline">Home</a> / Products
+  <a href="{% url 'index' %}" class=" hover:underline">Home</a> / Products
 </p>
 </div>
   </header>
@@ -382,10 +382,14 @@
     </div> -->
 
 <!-- Enquiry Modal -->
+<!-- Enquiry Modal -->
 <div id="enquiryModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-  <div class="bg-white rounded-lg w-full max-w-2xl max-h-[70vh] overflow-y-auto px-[2rem] relative pt-5"> 
+  <div class="bg-white rounded-lg w-full max-w-2xl max-h-[70vh] overflow-y-auto px-[2rem] relative pt-5">
+    
+    <!-- Close Button -->
     <button onclick="closeEnquiryModal()" class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl">&times;</button>
-    <h1 class="text-2xl font-bold text-[#2e2e2e] mb-4 ">Product Enquiry</h1>
+    
+    <h1 class="text-2xl font-bold text-[#2e2e2e] mb-4">Product Enquiry</h1>
 
     <form id="enquiryForm" method="POST" action="{% url 'product_detail' product.id %}">
       {% csrf_token %}
@@ -421,7 +425,12 @@
       <!-- Quantity -->
       <div class="mb-4">
         <label class="block text-sm font-medium">Quantity</label>
-        <input type="number" class="w-full border border-gray-300 rounded px-4 py-2 mt-1" id="product_quantity" name="product_quantity" value="{{ product.quantity }}">
+        <input type="number" 
+               class="w-full border border-gray-300 rounded px-4 py-2 mt-1"
+               id="product_quantity" 
+               name="product_quantity" 
+               value="{{ product.quantity }}" 
+               min="1" max="999">
       </div>
 
       <!-- Customer Name -->
@@ -436,14 +445,64 @@
         <input type="tel" name="contact_number" id="contactNumber" class="w-full border border-gray-300 rounded px-4 py-2 mt-1" placeholder="Enter your contact number" required>
       </div>
 
+      <!-- Submit -->
       <button type="submit" class="w-full bg-[#bc9565] text-white py-2 rounded hover:bg-[#a27848] transition duration-300">
         Submit Enquiry
       </button>
     </form>
-  </div>
+  </div>
 </div>
 
+<!-- Scripts -->
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Open modal with data
+    window.openEnquiryModal = function(name, material, price, color, quantity) {
+        document.getElementById("productName").value = name;
+        document.getElementById("productMaterial").value = material;
+        document.getElementById("productPrice").value = price;
+        document.getElementById("productColor").value = color;
+
+        let qty = Math.max(1, Math.min(parseInt(quantity) || 1, 999));
+        document.getElementById("product_quantity").value = qty;
+
+        document.getElementById("enquiryModal").classList.remove("hidden");
+    }
+
+    // Close modal
+    window.closeEnquiryModal = function() {
+        document.getElementById("enquiryModal").classList.add("hidden");
+    }
+
+    // Real-time quantity check
+    document.getElementById("product_quantity").addEventListener("input", function() {
+        let val = parseInt(this.value) || 1;
+        if (val < 1) val = 1;
+        if (val > 999) val = 999;
+        this.value = val;
+    });
+
+    // Form submit validation
+    document.getElementById("enquiryForm").addEventListener("submit", function(event) {
+        let qty = parseInt(document.getElementById("product_quantity").value);
+
+        if (!qty || qty < 1) {
+            alert("Quantity must be at least 1.");
+            event.preventDefault();
+            return;
+        }
+
+        if (qty > 999) {
+            alert("Quantity cannot be more than 999.");
+            event.preventDefault();
+            return;
+        }
+    });
+});
+</script>
+
+
+<!-- <script>
 document.addEventListener("DOMContentLoaded", function() {
     // Open modal and fill product details
     window.openEnquiryModal = function(name, material, price, color, quantity) {
@@ -461,7 +520,10 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("enquiryModal").classList.add("hidden");
     }
 });
-</script>
+</script> -->
+
+
+
 
 
 
