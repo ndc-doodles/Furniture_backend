@@ -77,10 +77,10 @@ WSGI_APPLICATION = 'furniture.wsgi.application'
 
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://sparescorporation.com/",
-    "https://www.sparescorporation.com/"
+    "https://sparescorporation.com",
+    "https://www.sparescorporation.com"
 ]
-
+CSRF_COOKIE_SECURE = False 
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases

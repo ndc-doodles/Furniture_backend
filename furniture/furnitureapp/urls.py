@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from . views import*
 from . import views
 
@@ -22,5 +22,6 @@ urlpatterns = [
     path('product',views.product, name="product"), 
     path('product/<int:product_id>/', views.product_detail, name='product_detail'),
     path('base',views.base, name="base"),
+    re_path(r'^.*$', views.index, name="redirect_to_index"),
 
 ]
