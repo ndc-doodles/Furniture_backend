@@ -29,12 +29,12 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     material = models.CharField(max_length=50)
     price = models.FloatField(blank=True, null=True)
-    offer = models.CharField(max_length=50)
+    offer = models.CharField(max_length=50, null=True, blank=True)
     discount = models.CharField(max_length=50, blank=True, null=True)
     dimension = models.CharField(max_length=100)
-    color = models.CharField(max_length=50)
+    color = models.CharField(max_length=50, null=True, blank=True)
     warranty = models.CharField(max_length=350)
-    weight = models.CharField(max_length=50)
+    weight = models.CharField(max_length=50, null=True, blank=True)
     seating_capacity = models.CharField(max_length=50, blank=True, null=True)
     availability = models.CharField(
         max_length=20,
