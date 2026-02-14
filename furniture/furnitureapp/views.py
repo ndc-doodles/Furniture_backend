@@ -4,6 +4,8 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.shortcuts import get_object_or_404, redirect
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
+from django.db import transaction
 
 # Create your views here.
 
@@ -371,88 +373,113 @@ import json
 #     })
 
 
+# ================= IMAGE SIZE VALIDATION =================
+MAX_IMAGE_SIZE = 100 * 1024  # 100 KB
+
+def validate_image_size(images):
+    for img in images:
+        if img.size > MAX_IMAGE_SIZE:
+            raise ValidationError("Each image must be 100 KB or less.")
+
+
 @never_cache
 def admin_productlisting(request):
     if not request.session.get('user_id'):
         return redirect('login')
 
     categories = Category.objects.all()
+    error_message = None
 
-    if request.method == "POST":
-        action = request.POST.get("action")
-        product_id = request.POST.get('product_id')
+    # ================= HELPER =================
+    def parse_float(value):
+        return float(value) if value not in [None, ''] else None
 
-        if action in ['edit', 'delete']:
-            if not product_id or not product_id.isdigit():
-                return HttpResponseBadRequest("Invalid or missing product ID.")
-            product_id = int(product_id)
+    try:
+        if request.method == "POST":
+            action = request.POST.get("action")
+            product_id = request.POST.get('product_id')
+            images = request.FILES.getlist('images')
 
-        # Helper: convert empty string to None for numeric fields
-        def parse_float(value):
-            return float(value) if value not in [None, ''] else None
+            if action in ['edit', 'delete']:
+                if not product_id or not product_id.isdigit():
+                    return HttpResponseBadRequest("Invalid or missing product ID.")
+                product_id = int(product_id)
 
-        if action == "add":
-            category_id = request.POST.get('category')
-            category = get_object_or_404(Category, id=category_id)
+            # ================= ADD PRODUCT =================
+            if action == "add":
+                validate_image_size(images)  # ✅ validate FIRST
 
-            product = Product.objects.create(
-                name=request.POST.get('name', '').strip(),
-                subsentence=request.POST.get('subsentence', '').strip(),
-                category=category,
-                material=request.POST.get('material', '').strip(),
-                price=parse_float(request.POST.get('price')),
-                offer=request.POST.get('offer', '').strip(),
-                discount=request.POST.get('discount', '').strip(),
-                dimension=request.POST.get('dimension', '').strip(),
-                color=request.POST.get('color', '').strip(),
-                weight=request.POST.get('weight', '').strip(),
-                seating_capacity=request.POST.get('seating_capacity', '').strip(),
-                warranty=request.POST.get('warranty', '').strip(),
-                availability=request.POST.get('availability', '').strip(),
-                return_policy=request.POST.get('return_policy', '').strip(),
-                description=request.POST.get('description', '').strip() or ""
-            )
-            for img in request.FILES.getlist('images'):
-                ProductImage.objects.create(product=product, image=img)
+                with transaction.atomic():
+                    category = get_object_or_404(Category, id=request.POST.get('category'))
 
-        elif action == "edit":
-            product = get_object_or_404(Product, id=product_id)
-            category_id = request.POST.get('category')
-            category = get_object_or_404(Category, id=category_id)
+                    product = Product.objects.create(
+                        name=request.POST.get('name', '').strip(),
+                        subsentence=request.POST.get('subsentence', '').strip(),
+                        category=category,
+                        material=request.POST.get('material', '').strip(),
+                        price=parse_float(request.POST.get('price')),
+                        offer=request.POST.get('offer', '').strip(),
+                        discount=request.POST.get('discount', '').strip(),
+                        dimension=request.POST.get('dimension', '').strip(),
+                        color=request.POST.get('color', '').strip(),
+                        weight=request.POST.get('weight', '').strip(),
+                        seating_capacity=request.POST.get('seating_capacity', '').strip(),
+                        warranty=request.POST.get('warranty', '').strip(),
+                        availability=request.POST.get('availability', '').strip(),
+                        return_policy=request.POST.get('return_policy', '').strip(),
+                        description=request.POST.get('description', '').strip() or ""
+                    )
 
-            product.name = request.POST.get('name', '').strip()
-            product.subsentence = request.POST.get('subsentence', '').strip()
-            product.category = category
-            product.material = request.POST.get('material', '').strip()
-            product.price = parse_float(request.POST.get('price'))
-            product.offer = request.POST.get('offer', '').strip()
-            product.discount = request.POST.get('discount', '').strip()
-            product.dimension = request.POST.get('dimension', '').strip()
-            product.color = request.POST.get('color', '').strip()
-            product.weight = request.POST.get('weight', '').strip()
-            product.seating_capacity = request.POST.get('seating_capacity', '').strip()
-            product.warranty = request.POST.get('warranty', '').strip()
-            product.availability = request.POST.get('availability', '').strip()
-            product.return_policy = request.POST.get('return_policy', '').strip()
-            product.description = request.POST.get('description', '').strip() or ""
-            product.save()
+                    for img in images:
+                        ProductImage.objects.create(product=product, image=img)
 
-            if request.FILES.getlist('images'):
-                product.images.all().delete()
-                for img in request.FILES.getlist('images'):
-                    ProductImage.objects.create(product=product, image=img)
+            # ================= EDIT PRODUCT =================
+            elif action == "edit":
+                product = get_object_or_404(Product, id=product_id)
 
-        elif action == "delete":
-            product = get_object_or_404(Product, id=product_id)
-            product.delete()
+                if images:
+                    validate_image_size(images)  # ✅ validate FIRST
 
-        return redirect('listing')
+                with transaction.atomic():
+                    category = get_object_or_404(Category, id=request.POST.get('category'))
 
-    # Prefetch images and prepare JSON for JS
+                    product.name = request.POST.get('name', '').strip()
+                    product.subsentence = request.POST.get('subsentence', '').strip()
+                    product.category = category
+                    product.material = request.POST.get('material', '').strip()
+                    product.price = parse_float(request.POST.get('price'))
+                    product.offer = request.POST.get('offer', '').strip()
+                    product.discount = request.POST.get('discount', '').strip()
+                    product.dimension = request.POST.get('dimension', '').strip()
+                    product.color = request.POST.get('color', '').strip()
+                    product.weight = request.POST.get('weight', '').strip()
+                    product.seating_capacity = request.POST.get('seating_capacity', '').strip()
+                    product.warranty = request.POST.get('warranty', '').strip()
+                    product.availability = request.POST.get('availability', '').strip()
+                    product.return_policy = request.POST.get('return_policy', '').strip()
+                    product.description = request.POST.get('description', '').strip() or ""
+                    product.save()
+
+                    if images:
+                        product.images.all().delete()
+                        for img in images:
+                            ProductImage.objects.create(product=product, image=img)
+
+            # ================= DELETE PRODUCT =================
+            elif action == "delete":
+                product = get_object_or_404(Product, id=product_id)
+                product.delete()
+
+            return redirect('listing')
+
+    except ValidationError as e:
+        error_message = e.message
+
+    # ================= FETCH PRODUCTS =================
     products = Product.objects.select_related('category').prefetch_related('images').order_by('-id')
-    products_json = []
-    for p in products:
-        products_json.append({
+
+    products_json = [
+        {
             'id': p.id,
             'category_id': p.category.id if p.category else None,
             'name': p.name,
@@ -470,15 +497,16 @@ def admin_productlisting(request):
             'return_policy': p.return_policy,
             'description': p.description,
             'images': [img.image.url for img in p.images.all()]
-        })
+        }
+        for p in products
+    ]
 
     return render(request, 'admin_productlisting.html', {
         'products': products,
         'categories': categories,
-        'products_json': json.dumps(products_json)
+        'products_json': json.dumps(products_json),
+        'error': error_message
     })
-
-
 
 from django.shortcuts import redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods
