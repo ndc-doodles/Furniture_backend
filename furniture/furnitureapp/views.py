@@ -12,25 +12,25 @@ from django.db import transaction
 
 
 
-# def register_view(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-#         confirm = request.POST.get('password2')
+def register_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        confirm = request.POST.get('password2')
 
-#         if password != confirm:
-#             return render(request, 'register.html', {'error': 'Passwords do not match'})
+        if password != confirm:
+            return render(request, 'register.html', {'error': 'Passwords do not match'})
 
-#         if Register.objects.filter(username=username).exists():
-#             return render(request, 'register.html', {'error': 'Username already exists'})
+        if Register.objects.filter(username=username).exists():
+            return render(request, 'register.html', {'error': 'Username already exists'})
 
-#         hashed_password = make_password(password)
-#         user = Register.objects.create(username=username, password=hashed_password)
-#         request.session['user_id'] = user.id
-#         request.session['username'] = user.username
-#         return redirect('login')
+        hashed_password = make_password(password)
+        user = Register.objects.create(username=username, password=hashed_password)
+        request.session['user_id'] = user.id
+        request.session['username'] = user.username
+        return redirect('login')
 
-#     return render(request, 'register.html')
+    return render(request, 'register.html')
 
 
 
